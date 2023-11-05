@@ -4,19 +4,27 @@ import rough from "roughjs";
 
 const roughGen = rough.generator();
 
-const WhiteBoard = ({ canvasRef, ctxRef }) => {
+const WhiteBoard = ({
+  canvasRef,
+  ctxRef,
+  strokeWidth,
+  color,
+  tool,
+  elements,
+  setElements,
+  setHistory,
+  fill,
+  isShiftPressed,
+}) => {
   const [hold, setHold] = useState(false);
-  const [elements, setElements] = useState([]);
-  const [tool, setTool] = useState("pencil");
   const divRef = useRef(null);
-  const [color, setColor] = useState("red");
 
   const handleMouseDown = (e) => {
     const { offsetX, offsetY } = e.nativeEvent;
     setHold(true);
 
-    //pencil -free draw
-    if (tool === "pencil") {
+    //pencil and eraser -free draw
+    if (tool === "pencil" || tool === "eraser") {
       setElements((prevElements) => [
         ...prevElements,
         {
@@ -24,7 +32,8 @@ const WhiteBoard = ({ canvasRef, ctxRef }) => {
           offsetX,
           offsetY,
           path: [[offsetX, offsetY]],
-          color: color,
+          color: tool === "pencil" ? color : "#ffffff",
+          strokeWidth: strokeWidth,
         },
       ]);
     }
@@ -40,6 +49,58 @@ const WhiteBoard = ({ canvasRef, ctxRef }) => {
           endx: offsetX,
           endy: offsetY,
           color: color,
+          strokeWidth: strokeWidth,
+        },
+      ]);
+    }
+
+    //rectangle
+    else if (tool === "rectangle") {
+      setElements((prevElements) => [
+        ...prevElements,
+        {
+          type: "rect",
+          offsetX,
+          offsetY,
+          width: 0,
+          height: 0,
+          color: color,
+          strokeWidth: strokeWidth,
+          fill: fill === true ? color : "",
+        },
+      ]);
+    }
+
+    //square
+    else if (tool === "square") {
+      setElements((prevElements) => [
+        ...prevElements,
+        {
+          type: "square",
+          offsetX,
+          offsetY,
+          width: 0,
+          height: 0,
+          color: color,
+          strokeWidth: strokeWidth,
+          fill: fill === true ? color : "",
+        },
+      ]);
+    }
+
+    //circle and ellipse
+    else if (tool === "circle") {
+      setElements((prevElements) => [
+        ...prevElements,
+        {
+          type: isShiftPressed ? "circle" : "ellipse",
+          offsetX,
+          offsetY,
+          width: offsetX,
+          height: offsetY,
+          color: color,
+          strokeWidth: strokeWidth,
+          fill: fill === true ? color : "",
         },
       ]);
     }
@@ -48,8 +109,9 @@ const WhiteBoard = ({ canvasRef, ctxRef }) => {
   const handleMouseMove = (e) => {
     const { offsetX, offsetY } = e.nativeEvent;
     if (hold) {
+      setHistory([]);
       // pencil
-      if (tool === "pencil") {
+      if (tool === "pencil" || tool === "eraser") {
         const { path } = elements[elements.length - 1];
         const newpath = [...path, [offsetX, offsetY]];
         setElements((prevElements) =>
@@ -67,7 +129,7 @@ const WhiteBoard = ({ canvasRef, ctxRef }) => {
       }
 
       // line
-      if (tool === "line") {
+      else if (tool === "line") {
         setElements((prevElements) =>
           prevElements.map((ele, index) => {
             if (index === elements.length - 1) {
@@ -82,12 +144,68 @@ const WhiteBoard = ({ canvasRef, ctxRef }) => {
           })
         );
       }
+
+      //reactangle
+      else if (tool === "rectangle") {
+        setElements((prevElements) => {
+          return prevElements.map((ele, index) => {
+            if (index === elements.length - 1) {
+              return {
+                ...ele,
+                width: offsetX - ele.offsetX,
+                height: offsetY - ele.offsetY,
+              };
+            } else {
+              return ele;
+            }
+          });
+        });
+      }
+
+      //square
+      else if (tool === "square") {
+        setElements((prevElements) => {
+          return prevElements.map((ele, index) => {
+            if (index === elements.length - 1) {
+              return {
+                ...ele,
+                width: offsetY - ele.offsetY,
+                height: offsetY - ele.offsetY,
+              };
+            } else {
+              return ele;
+            }
+          });
+        });
+      }
+
+      //circle and ellipse
+      else if (tool === "circle") {
+        setElements((prevElements) => {
+          return prevElements.map((ele, index) => {
+            if (index === elements.length - 1) {
+              return {
+                ...ele,
+                type: isShiftPressed ? "circle" : "ellipse",
+                width: offsetX,
+                height: offsetY,
+              };
+            } else {
+              return ele;
+            }
+          });
+        });
+      }
     }
   };
 
   const handleMouseUp = (e) => {
     setHold(false);
   };
+
+  // const handleKeyDown = (e) => {
+  //   console.log(e);
+  // };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -132,7 +250,7 @@ const WhiteBoard = ({ canvasRef, ctxRef }) => {
       if (element.type === "pencil") {
         roughCanvas.linearPath(element.path, {
           stroke: element.color,
-          strokeWidth: 1,
+          strokeWidth: element.strokeWidth,
           roughness: 0,
         });
       } else if (element.type === "line") {
@@ -145,8 +263,71 @@ const WhiteBoard = ({ canvasRef, ctxRef }) => {
             element.endy,
             {
               stroke: element.color,
-              strokeWidth: 1,
+              strokeWidth: element.strokeWidth,
               roughness: 0,
+            }
+          )
+        );
+      } else if (element.type === "rect") {
+        roughCanvas.draw(
+          roughGen.rectangle(
+            element.offsetX,
+            element.offsetY,
+            element.width,
+            element.height,
+            {
+              stroke: element.color,
+              strokeWidth: element.strokeWidth,
+              roughness: 0,
+              fill: element.fill,
+              fillStyle: "solid",
+            }
+          )
+        );
+      } else if (element.type === "square") {
+        roughCanvas.draw(
+          roughGen.rectangle(
+            element.offsetX,
+            element.offsetY,
+            element.width,
+            element.height,
+            {
+              stroke: element.color,
+              strokeWidth: element.strokeWidth,
+              roughness: 0,
+              fill: element.fill,
+              fillStyle: "solid",
+            }
+          )
+        );
+      } else if (element.type === "circle") {
+        roughCanvas.draw(
+          roughGen.circle(
+            (element.width + element.offsetX) / 2,
+            (element.height + element.offsetY) / 2,
+            element.width - element.offsetX,
+            {
+              stroke: element.color,
+              strokeWidth: element.strokeWidth,
+              roughness: 0,
+              fill: element.fill,
+              fillStyle: "solid",
+            }
+          )
+        );
+      } else if (element.type === "ellipse") {
+        roughCanvas.draw(
+          roughGen.ellipse(
+            (element.width + element.offsetX) / 2,
+            (element.height + element.offsetY) / 2,
+            element.width - element.offsetX,
+            element.height - element.offsetY,
+            {
+              stroke: element.color,
+              strokeWidth: element.strokeWidth,
+              roughness: 0,
+              fill: element.fill,
+              fillStyle: "solid",
             }
           )
         );
@@ -156,11 +337,12 @@ const WhiteBoard = ({ canvasRef, ctxRef }) => {
 
   return (
     <>
-      <div className="h-screen w-screen flex justify-center items-center">
+      <div className="h-full w-full">
         <div
           onMouseDown={(e) => handleMouseDown(e)}
           onMouseMove={(e) => handleMouseMove(e)}
           onMouseUp={(e) => handleMouseUp(e)}
+          onMouseOut={(e) => handleMouseUp(e)}
           // onTouchStart={(e) => handleMouseDown(e)}
           onTouchMove={(e) => handleTouch(e)}
           // onTouchEnd={(e) => handleMouseUp(e)}
