@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import WhiteBoard from "./WhiteBoard";
 import Palette from "./Palette";
 
-const GameArea = () => {
+const GameArea = ({ roomId }) => {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const [strokeWidth, setStrokeWidth] = useState(1);
@@ -12,6 +12,7 @@ const GameArea = () => {
   const [history, setHistory] = useState([]);
   const [fill, setFill] = useState(false);
   const [isShiftPressed, setShiftPressed] = useState(false);
+  const [presenter, setPresenter] = useState(true);
 
   const handleKeyPress = (e) => {
     if (e.key === "+") {
@@ -41,8 +42,10 @@ const GameArea = () => {
   };
 
   useEffect(() => {
-    console.log(elements);
-  }, [elements]);
+    // console.log(elements);
+    // console.log(roomId);
+    console.log(presenter);
+  }, [presenter]);
 
   useEffect(() => {
     window.addEventListener("keypress", handleKeyPress);
@@ -70,6 +73,8 @@ const GameArea = () => {
             setHistory={setHistory}
             fill={fill}
             isShiftPressed={isShiftPressed}
+            roomId={roomId}
+            presenter={presenter}
           />
         </div>
         <div className="absolute bottom-0">
@@ -88,6 +93,8 @@ const GameArea = () => {
             strokeWidth={strokeWidth}
             fill={fill}
             setFill={setFill}
+            presenter={presenter}
+            setPresenter={setPresenter}
           />
         </div>
       </div>

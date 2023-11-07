@@ -1,8 +1,17 @@
 "use client";
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import rough from "roughjs";
+import { socket } from "../../../test/socketConn";
 
 const roughGen = rough.generator();
+
+const userJoined = (data) => {
+  if (data.success) {
+    console.log("userJoined");
+  } else {
+    console.log("userJoined error");
+  }
+};
 
 const WhiteBoard = ({
   canvasRef,
@@ -15,6 +24,8 @@ const WhiteBoard = ({
   setHistory,
   fill,
   isShiftPressed,
+  roomId,
+  presenter,
 }) => {
   const [hold, setHold] = useState(false);
   const divRef = useRef(null);
@@ -208,6 +219,15 @@ const WhiteBoard = ({
   // };
 
   useEffect(() => {
+    socket.on("userIsJoined", userJoined);
+    socket.on("whiteBoardDrawingResponse", (data) => {
+      console.log(data);
+      console.log(presenter);
+      if (presenter === false) setElements(data);
+    });
+  }, [presenter]);
+
+  useEffect(() => {
     const canvas = canvasRef.current;
     canvas.height = canvas.offsetHeight;
     canvas.width = canvas.offsetWidth;
@@ -234,7 +254,12 @@ const WhiteBoard = ({
   // }, [divRef]);
 
   useLayoutEffect(() => {
-    console.log(elements);
+    // console.log(elements);
+    const data = {
+      roomId: roomId,
+      elements: elements,
+    };
+    if (presenter === true) socket.emit("whiteBoardDrawing", data);
     const roughCanvas = rough.canvas(canvasRef.current);
 
     if (elements.length > 0) {

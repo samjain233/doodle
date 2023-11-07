@@ -26,6 +26,8 @@ const Palette = ({
   strokeWidth,
   fill,
   setFill,
+  presenter,
+  setPresenter,
 }) => {
   const [isClient, setIsClient] = useState(false);
   const colorRef = useRef(null);
@@ -35,11 +37,11 @@ const Palette = ({
   };
 
   const handleClear = () => {
+    setElements([]);
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.fillRect = "white";
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-    setElements([]);
   };
 
   const handleUndoClick = () => {
@@ -132,7 +134,12 @@ const Palette = ({
         >
           <PiPaintBucketFill />
         </div>
-        <div className="p-2">
+        <div
+          onClick={() => setPresenter((prevPresenter) => !prevPresenter)}
+          className={`p-2 mx-1 cursor-pointer hover:bg-gray-500 rounded-full transition-all ${
+            presenter === true ? " bg-gray-600" : ""
+          }`}
+        >
           <CgColorPicker />
         </div>
         <div
