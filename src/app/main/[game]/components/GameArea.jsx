@@ -1,18 +1,13 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import StateContext from "../States/StateManager";
 import WhiteBoard from "./WhiteBoard";
 import Palette from "./Palette";
+import ChatArea from "./ChatArea";
 
 const GameArea = ({ roomId }) => {
-  const canvasRef = useRef(null);
-  const ctxRef = useRef(null);
-  const [strokeWidth, setStrokeWidth] = useState(1);
-  const [color, setColor] = useState("#000000");
-  const [tool, setTool] = useState("pencil");
-  const [elements, setElements] = useState([]);
-  const [history, setHistory] = useState([]);
-  const [fill, setFill] = useState(false);
   const [isShiftPressed, setShiftPressed] = useState(false);
   const [presenter, setPresenter] = useState(true);
+  const { setStrokeWidth } = useContext(StateContext);
 
   const handleKeyPress = (e) => {
     if (e.key === "+") {
@@ -62,40 +57,21 @@ const GameArea = ({ roomId }) => {
     <>
       <div className="relative">
         <div className="h-screen w-screen">
-          <WhiteBoard
-            canvasRef={canvasRef}
-            ctxRef={ctxRef}
-            strokeWidth={strokeWidth}
-            color={color}
-            tool={tool}
-            elements={elements}
-            setElements={setElements}
-            setHistory={setHistory}
-            fill={fill}
-            isShiftPressed={isShiftPressed}
-            roomId={roomId}
-            presenter={presenter}
-          />
-        </div>
-        <div className="absolute bottom-0">
-          <Palette
-            canvasRef={canvasRef}
-            ctxRef={ctxRef}
-            setStrokeWidth={setStrokeWidth}
-            color={color}
-            setColor={setColor}
-            tool={tool}
-            setTool={setTool}
-            elements={elements}
-            setElements={setElements}
-            history={history}
-            setHistory={setHistory}
-            strokeWidth={strokeWidth}
-            fill={fill}
-            setFill={setFill}
-            presenter={presenter}
-            setPresenter={setPresenter}
-          />
+          <div className="w-full h-full grid grid-cols-12">
+            <div className="col-span-9">
+              <WhiteBoard
+                isShiftPressed={isShiftPressed}
+                roomId={roomId}
+                presenter={presenter}
+              />
+            </div>
+            <div className="col-span-3">
+              <ChatArea roomId={roomId} />
+            </div>
+          </div>
+          <div className="absolute top-0 left-0 bottom-0">
+            <Palette presenter={presenter} setPresenter={setPresenter} />
+          </div>
         </div>
       </div>
     </>

@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/main/[game]/components/WhiteBoard.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts","**/*.js", "**/*.tsx","**/*.jsx", ".next/types/**/*.ts", "src/app/main/[game]/components/WhiteBoard.jsx", "src/app/main/[game]/page.jsx"],
   "exclude": ["node_modules"]
 }

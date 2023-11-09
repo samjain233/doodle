@@ -1,5 +1,12 @@
 "use client";
-import { useEffect, useState, useLayoutEffect, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useLayoutEffect,
+  useRef,
+  useContext,
+} from "react";
+import StateContext from "../States/StateManager";
 import rough from "roughjs";
 import { socket } from "../../../test/socketConn";
 
@@ -13,20 +20,18 @@ const userJoined = (data) => {
   }
 };
 
-const WhiteBoard = ({
-  canvasRef,
-  ctxRef,
-  strokeWidth,
-  color,
-  tool,
-  elements,
-  setElements,
-  setHistory,
-  fill,
-  isShiftPressed,
-  roomId,
-  presenter,
-}) => {
+const WhiteBoard = ({ isShiftPressed, roomId, presenter }) => {
+  const {
+    canvasRef,
+    ctxRef,
+    strokeWidth,
+    color,
+    tool,
+    elements,
+    setElements,
+    setHistory,
+    fill,
+  } = useContext(StateContext);
   const [hold, setHold] = useState(false);
   const divRef = useRef(null);
 

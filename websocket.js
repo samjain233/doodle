@@ -10,12 +10,18 @@ const io = new Server(httpServer, {
   },
 });
 
-io.on("connection", async (socket) => {
+io.on("connection", (socket) => {
   console.log(socket.id);
   socket.on("userJoined", (data) => {
     const { roomId } = data;
     socket.join(roomId);
     socket.emit("userIsJoined", { success: true });
+  });
+
+  socket.on("whiteBoardDrawing", (data) => {
+    const { roomId, elements } = data;
+    console.log(roomId, elements);
+    socket.to(roomId).emit("whiteBoardDrawingResponse", elements);
   });
 });
 

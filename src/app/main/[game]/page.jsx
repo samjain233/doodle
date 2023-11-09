@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import GameArea from "./components/GameArea";
 import { socket } from "../../test/socketConn";
+import { StateProvider } from "./States/StateManager";
 
 const game = ({ params }) => {
   const data = {
@@ -15,9 +16,9 @@ const game = ({ params }) => {
 
   return (
     <>
-      <div className="h-full w-full">
+      <StateProvider>
         <GameArea roomId={params.game} />
-      </div>
+      </StateProvider>
     </>
   );
 };
