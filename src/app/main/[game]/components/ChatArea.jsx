@@ -2,9 +2,10 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import StateContext from "../States/StateManager";
 import { GrFormNextLink } from "react-icons/gr";
 import { socket } from "@/app/test/socketConn";
+import globalStateContext from "@/app/States/GlobalStateManager";
 
-const chatArea = ({ roomId }) => {
-  const { chat, setChat } = useContext(StateContext);
+const ChatArea = ({ roomId }) => {
+  const { chat, setChat } = useContext(globalStateContext);
   const [inputChat, setInputChat] = useState("");
   const endMessageRef = useRef(null);
 
@@ -80,4 +81,4 @@ const chatArea = ({ roomId }) => {
   );
 };
 
-export default chatArea;
+export default ChatArea;

@@ -33,7 +33,7 @@ const UsersInLobby = ({ roomId }) => {
 
   return (
     <>
-      <div className="h-full w-full bg-white grid grid-cols-5 gap-4 gap-y-12">
+      <div className="h-full w-full bg-white grid grid-cols-4 gap-4 gap-y-12">
         {lobby.map((element) => {
           return (
             <div key={element.socketId}>
