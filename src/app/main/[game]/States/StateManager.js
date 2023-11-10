@@ -3,7 +3,6 @@ import { createContext, useState, useRef } from "react";
 const StateContext = createContext();
 
 export const StateProvider = ({ children }) => {
-  const [chat, setChat] = useState([]);
   const [tool, setTool] = useState("pencil");
   const [color, setColor] = useState("#000000");
   const [elements, setElements] = useState([]);

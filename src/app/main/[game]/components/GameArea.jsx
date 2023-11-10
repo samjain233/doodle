@@ -3,6 +3,7 @@ import StateContext from "../States/StateManager";
 import WhiteBoard from "./WhiteBoard";
 import Palette from "./Palette";
 import ChatArea from "./ChatArea";
+import SideNav from "./SideNav";
 
 const GameArea = ({ roomId }) => {
   const [isShiftPressed, setShiftPressed] = useState(false);
@@ -66,7 +67,7 @@ const GameArea = ({ roomId }) => {
               />
             </div>
             <div className="col-span-3">
-              <ChatArea roomId={roomId} />
+              <SideNav roomId={roomId} />
             </div>
           </div>
           <div className="absolute top-0 left-0 bottom-0">

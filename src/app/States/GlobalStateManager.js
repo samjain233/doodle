@@ -7,7 +7,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [chat, setChat] = useState([]);
 
   return (
-    <globalStateContext.Provider value={{ isAdmin, setAdmin ,chat , setChat}}>
+    <globalStateContext.Provider value={{ isAdmin, setAdmin, chat, setChat }}>
       {children}
     </globalStateContext.Provider>
   );

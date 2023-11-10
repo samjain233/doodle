@@ -4,6 +4,7 @@ import UsersInLobby from "./components/UsersInLobby";
 import { socket } from "../../test/socketConn";
 import { LobbyStateProvider } from "./States/lobbyStateManager";
 import ChatArea from "@/app/main/[game]/components/ChatArea";
+import SideNav from "@/app/main/[game]/components/SideNav";
 
 const page = ({ params }) => {
   //   useEffect(() => {}, []);
@@ -17,7 +18,8 @@ const page = ({ params }) => {
               <UsersInLobby roomId={params.lobbyId} />
             </div>
             <div className="col-span-3">
-              <ChatArea roomId={params.lobbyId} />
+                <SideNav roomId={params.lobbyId} />
+              {/* <ChatArea roomId={params.lobbyId} /> */}
             </div>
           </div>
         </div>

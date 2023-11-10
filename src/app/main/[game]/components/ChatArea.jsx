@@ -44,9 +44,9 @@ const ChatArea = ({ roomId }) => {
 
   return (
     <>
-      <div className="w-full h-full bg-gray-300 shadow-md p-1">
+      <div className="w-full h-full bg-gray-300 ">
         <div
-          className="w-full h-[60vh] overflow-y-auto py-1 [&>*:nth-child(odd)]:bg-gray-200"
+          className="w-full h-[90%] overflow-y-auto py-1 [&>*:nth-child(odd)]:bg-gray-200"
           ref={endMessageRef}
         >
           {chat.map((c, index) => {
