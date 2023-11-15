@@ -20,7 +20,7 @@ const userJoined = (data) => {
   }
 };
 
-const WhiteBoard = ({ isShiftPressed, roomId, presenter }) => {
+const WhiteBoard = ({ isShiftPressed, roomId }) => {
   const {
     canvasRef,
     ctxRef,
@@ -30,12 +30,14 @@ const WhiteBoard = ({ isShiftPressed, roomId, presenter }) => {
     elements,
     setElements,
     setHistory,
+    presenter,
     fill,
   } = useContext(StateContext);
   const [hold, setHold] = useState(false);
   const divRef = useRef(null);
 
   const handleMouseDown = (e) => {
+    if(presenter === false ) return ;
     const { offsetX, offsetY } = e.nativeEvent;
     setHold(true);
 
@@ -123,6 +125,7 @@ const WhiteBoard = ({ isShiftPressed, roomId, presenter }) => {
   };
 
   const handleMouseMove = (e) => {
+    if(presenter === false ) return ;
     const { offsetX, offsetY } = e.nativeEvent;
     if (hold) {
       setHistory([]);
@@ -216,6 +219,7 @@ const WhiteBoard = ({ isShiftPressed, roomId, presenter }) => {
   };
 
   const handleMouseUp = (e) => {
+    if(presenter === false ) return ;
     setHold(false);
   };
 
@@ -226,8 +230,6 @@ const WhiteBoard = ({ isShiftPressed, roomId, presenter }) => {
   useEffect(() => {
     socket.on("userIsJoined", userJoined);
     socket.on("whiteBoardDrawingResponse", (data) => {
-      console.log(data);
-      console.log(presenter);
       if (presenter === false) setElements(data);
     });
   }, [presenter]);

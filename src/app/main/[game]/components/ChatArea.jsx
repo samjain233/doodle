@@ -36,6 +36,9 @@ const ChatArea = ({ roomId }) => {
         return [...prevChat, { socketId, chatMsg }];
       });
     });
+    return () => {
+      socket.removeAllListeners("recievedChatData");
+    };
   }, []);
 
   useEffect(() => {

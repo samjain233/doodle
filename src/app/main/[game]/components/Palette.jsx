@@ -13,7 +13,7 @@ import { CgColorPicker } from "react-icons/cg";
 import { useEffect, useRef, useState, useContext } from "react";
 import StateContext from "../States/StateManager";
 
-const Palette = ({ presenter, setPresenter }) => {
+const Palette = () => {
   const {
     canvasRef,
     strokeWidth,
@@ -142,10 +142,8 @@ const Palette = ({ presenter, setPresenter }) => {
             <PiPaintBucketFill />
           </div>
           <div
-            onClick={() => setPresenter((prevPresenter) => !prevPresenter)}
-            className={`p-2 m-1 cursor-pointer hover:bg-gray-500 rounded-full transition-all ${
-              presenter === true ? " bg-gray-600 text-yellow-500" : ""
-            }`}
+            // onClick={() => setPresenter((prevPresenter) => !prevPresenter)}
+            className={`p-2 m-1 cursor-pointer hover:bg-gray-500 rounded-full transition-all`}
           >
             <CgColorPicker />
           </div>
