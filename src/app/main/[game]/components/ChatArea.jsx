@@ -5,7 +5,7 @@ import { socket } from "@/app/test/socketConn";
 import globalStateContext from "@/app/States/GlobalStateManager";
 
 const ChatArea = ({ roomId }) => {
-  const { chat, setChat } = useContext(globalStateContext);
+  const { chat, setChat , myTurn} = useContext(globalStateContext);
   const [inputChat, setInputChat] = useState("");
   const endMessageRef = useRef(null);
 
@@ -14,17 +14,12 @@ const ChatArea = ({ roomId }) => {
   };
 
   const handleInputChat = () => {
-    if (inputChat === "") return;
+    if (inputChat === "" || myTurn === true) return;
     const data = {
       roomId: roomId,
-      socketId: socket.id,
       chatMsg: inputChat,
     };
-    socket.emit("chatData", data);
-    const socketId = socket.id;
-    setChat((prevChat) => {
-      return [...prevChat, { socketId, chatMsg: inputChat }];
-    });
+    socket.emit("sendMessage", data);
     setInputChat("");
   };
 
@@ -49,7 +44,9 @@ const ChatArea = ({ roomId }) => {
     <>
       <div className="w-full h-full bg-gray-300 ">
         <div
-          className="w-full h-[90%] overflow-y-auto py-1 [&>*:nth-child(odd)]:bg-gray-200"
+          className={`w-full ${
+            !myTurn ? "h-[90%]" : "h-full"
+          } transition-all overflow-y-auto py-1 [&>*:nth-child(odd)]:bg-gray-200`}
           ref={endMessageRef}
         >
           {chat.map((c, index) => {
@@ -64,21 +61,23 @@ const ChatArea = ({ roomId }) => {
             );
           })}
         </div>
-        <div className="w-full relative my-1">
-          <input
-            type="text"
-            className="w-full p-2 pr-8 rounded text-black text-sm  border border-1 border-solid border-black"
-            value={inputChat}
-            onChange={(e) => setInputChat(e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e)}
-          />
-          <div
-            className="absolute right-0 top-0 p-1 text-3xl hover:cursor-pointer"
-            onClick={handleInputChat}
-          >
-            <GrFormNextLink />
+        {!myTurn && (
+          <div className="w-full relative my-1">
+            <input
+              type="text"
+              className="w-full p-2 pr-8 rounded text-black text-sm  border border-1 border-solid border-black"
+              value={inputChat}
+              onChange={(e) => setInputChat(e.target.value)}
+              onKeyDown={(e) => handleKeyDown(e)}
+            />
+            <div
+              className="absolute right-0 top-0 p-1 text-3xl hover:cursor-pointer"
+              onClick={handleInputChat}
+            >
+              <GrFormNextLink />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

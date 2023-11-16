@@ -1,6 +1,7 @@
 //selecting a new presenter and opening and closing choosing window code
 import { lobby } from "../global/GlobalVariables.js";
 import { io } from "../websocket.js";
+import { setFourWordsService } from "./setFourWordsService.js";
 
 export const chooseWordService = (roomId , token) => {
   let lobbyData = lobby.get(roomId);
@@ -17,6 +18,9 @@ export const chooseWordService = (roomId , token) => {
   console.log(lobbyData);
   lobby.set(roomId, lobbyData);
   io.to(presenterSocketId).emit("chooseWord", { chooseWordWindow: true });
+
+  //sending word list to the presenter
+  setFourWordsService(presenterSocketId);
 
   //setting time in time panel
   const time = 20;

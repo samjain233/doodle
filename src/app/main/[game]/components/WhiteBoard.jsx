@@ -9,6 +9,7 @@ import {
 import StateContext from "../States/StateManager";
 import rough from "roughjs";
 import { socket } from "../../../test/socketConn";
+import globalStateContext from "@/app/States/GlobalStateManager";
 
 const roughGen = rough.generator();
 
@@ -30,9 +31,9 @@ const WhiteBoard = ({ isShiftPressed, roomId }) => {
     elements,
     setElements,
     setHistory,
-    presenter,
     fill,
   } = useContext(StateContext);
+  const {presenter} = useContext(globalStateContext);
   const [hold, setHold] = useState(false);
   const divRef = useRef(null);
 

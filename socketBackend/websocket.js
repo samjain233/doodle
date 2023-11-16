@@ -18,6 +18,18 @@ import {
 } from "./services/displayScoreService.js";
 import { drawToken } from "./utils/drawToken.js";
 import { failToSelectWord } from "./services/messageService.js";
+import { shuffleArray } from "./utils/shuffleArray.js";
+import mixedArray from "./utils/arrayData.js";
+import { setFourWordsService } from "./services/setFourWordsService.js";
+import {
+  displayCorrectWord,
+  displayGuessWord,
+} from "./services/displayGuessWord.js";
+import { handleInputMessageService } from "./services/hanldeInputMessageService.js";
+import { setStartTimeService } from "./services/lobbyServices.js";
+
+const dataArray = shuffleArray(mixedArray);
+console.log(dataArray);
 
 const httpServer = createServer();
 
@@ -67,6 +79,7 @@ io.on("connection", (socket) => {
         },
         roundDetails: {
           round: 0,
+          word: null,
         },
         users: [
           {
@@ -127,22 +140,26 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("chatData", (data) => {
-    console.log(data);
-    const { roomId, socketId, chatMsg } = data;
-    socket.to(roomId).emit("recievedChatData", { socketId, chatMsg });
+  socket.on("sendMessage", (data) => {
+    const { roomId, chatMsg } = data;
+    handleInputMessageService(roomId, chatMsg, socket);
   });
 
   socket.on("wordChoosed", (data) => {
     //check karo ki right presenter hai ya nahi
     //then token match karo aur token ko hatao
-    const { choosedWordIndex, roomId } = data;
-    const lobbyData = lobby.get(roomId);
+    const { word, roomId } = data;
+    let lobbyData = lobby.get(roomId);
     const presenterSocketId = lobbyData.presenter.socketId;
     if (presenterSocketId === socket.id) {
       endWordService(roomId);
+      setStartTimeService(roomId);
+      displayGuessWord(roomId, word);
       setPresenterService(roomId);
       setNextTimeService(roomId, 2);
+      //setting a new word in the lobby
+      lobbyData.roundDetails.word = word;
+      lobby.set(roomId, lobbyData);
     }
   });
 
@@ -281,9 +298,10 @@ const getCurrentTime = () => {
           }
           break;
         case 3:
-          //drawing time overs , showing scores , removing presenter
+          //drawing time overs , showing scores ,showing correct answer, unsetting of word, removing presenter
           displayScoreService(roomId);
           removePresenterService(roomId);
+          displayCorrectWord(roomId); //removing word service called from this
           setNextTimeService(roomId, 3);
           break;
         case 4:

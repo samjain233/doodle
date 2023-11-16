@@ -16,7 +16,7 @@ const SideNav = ({ roomId }) => {
             <Time />
           </div>
           <div className="w-full h-full row-span-2 border-b border-white border-solid">
-            {/* <GuessWord /> */}
+            <GuessWord />
           </div>
           <div className="w-full h-full border-b border-white border-solid">
             <SideNavNavigation

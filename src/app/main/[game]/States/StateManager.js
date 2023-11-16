@@ -1,4 +1,4 @@
-import { createContext, useState, useRef, use } from "react";
+import { createContext, useState, useRef } from "react";
 
 const StateContext = createContext();
 
@@ -9,7 +9,6 @@ export const StateProvider = ({ children }) => {
   const [strokeWidth, setStrokeWidth] = useState(1);
   const [history, setHistory] = useState([]);
   const [fill, setFill] = useState(false);
-  const [presenter, setPresenter] = useState(false);
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   return (
@@ -27,8 +26,6 @@ export const StateProvider = ({ children }) => {
         setHistory,
         fill,
         setFill,
-        presenter,
-        setPresenter,
         canvasRef,
         ctxRef,
       }}

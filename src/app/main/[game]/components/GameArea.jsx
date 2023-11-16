@@ -8,13 +8,15 @@ import { socket } from "@/app/test/socketConn";
 import Waiting from "./Waiting";
 import ChooseWord from "./ChooseWord";
 import Score from "./Score";
+import globalStateContext from "@/app/States/GlobalStateManager";
 
 const GameArea = ({ roomId }) => {
   const [isShiftPressed, setShiftPressed] = useState(false);
   const [hideWaitingSection, setHideWaitingSection] = useState(false);
   const [wordWindow, setWordWindow] = useState(false);
   const [scoreWindow, setScoreWindow] = useState(false);
-  const { setStrokeWidth, setPresenter, presenter } = useContext(StateContext);
+  const { setStrokeWidth } = useContext(StateContext);
+  const { setPresenter, presenter , setMyTurn } = useContext(globalStateContext);
 
   const handleKeyPress = (e) => {
     if (e.key === "+") {
@@ -55,12 +57,14 @@ const GameArea = ({ roomId }) => {
     window.addEventListener("keyup", handleKeyUp);
     socket.on("setPresenter", ({ presenter }) => {
       setPresenter(presenter);
+      if(presenter === false) setMyTurn(false);
     });
     socket.on("waitingSection", ({ hideWaiting }) => {
       setHideWaitingSection(hideWaiting);
     });
     socket.on("chooseWord", ({ chooseWordWindow }) => {
       setWordWindow(chooseWordWindow);
+      setMyTurn(true);
     });
     socket.on("showScore", ({ showScoreWindow }) => {
       setScoreWindow(showScoreWindow);
@@ -91,7 +95,7 @@ const GameArea = ({ roomId }) => {
                   wordWindow ? "top-0" : "top-[-1200px]"
                 } left-0 transition-all duration-500`}
               >
-                <ChooseWord roomId={roomId}/>
+                <ChooseWord roomId={roomId} />
               </div>
               <div
                 className={`z-[50] h-full w-full absolute ${
