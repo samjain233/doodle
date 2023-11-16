@@ -91,7 +91,7 @@ const GameArea = ({ roomId }) => {
                   wordWindow ? "top-0" : "top-[-1200px]"
                 } left-0 transition-all duration-500`}
               >
-                <ChooseWord />
+                <ChooseWord roomId={roomId}/>
               </div>
               <div
                 className={`z-[50] h-full w-full absolute ${

@@ -3,10 +3,11 @@ import React, { useEffect } from "react";
 
 const words = ["apple", "banana", "cat", "dragon fruit"];
 
-const ChooseWord = () => {
-  useEffect(() => {
-    
-  }, []);
+const ChooseWord = ({roomId}) => {
+  const handleWordClick = (index) => {
+    // console.log(index);
+    socket.emit("wordChoosed", { choosedWordIndex: index , roomId : roomId });
+  };
   return (
     <>
       <div className="w-full h-full bg-gray-200/20 backdrop-blur-md">
@@ -19,6 +20,9 @@ const ChooseWord = () => {
               return (
                 <div
                   key={index}
+                  onClick={() => {
+                    handleWordClick(index);
+                  }}
                   className="bg-gray-500 text-white text-4xl px-4 py-2 m-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-600 transition-all"
                 >
                   {word}

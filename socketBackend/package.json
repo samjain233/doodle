@@ -1,0 +1,16 @@
+{
+  "name": "backendwebster",
+  "version": "1.0.0",
+  "description": "",
+  "main": "websocket.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "randomstring": "^1.3.0",
+    "socket.io": "^4.7.2"
+  }
+}
