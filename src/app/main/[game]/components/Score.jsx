@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext} from "react";
 import Profile from "./Profile";
 import { socket } from "@/app/test/socketConn";
+import globalStateContext from "@/app/States/GlobalStateManager";
 
 const Score = ({ roomId }) => {
-  const [lobby, setLobby] = useState([]);
+  const { lobby, setLobby } = useContext(globalStateContext);
   useEffect(() => {
-    socket.on("userScores", (lobbyUsers) => {
+    socket.on("lobby", (lobbyUsers) => {
       setLobby(lobbyUsers);
     });
   }, []);

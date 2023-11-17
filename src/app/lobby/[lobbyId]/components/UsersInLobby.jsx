@@ -5,8 +5,7 @@ import { socket } from "@/app/test/socketConn";
 import globalStateContext from "@/app/States/GlobalStateManager";
 
 const UsersInLobby = ({ roomId }) => {
-  const { lobby, setLobby } = useContext(lobbyStateContext);
-  const { isAdmin, setAdmin } = useContext(globalStateContext);
+  const { isAdmin, setAdmin , lobby, setLobby} = useContext(globalStateContext);
   const data = {
     userName: "helloSam",
     roomId: roomId,

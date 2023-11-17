@@ -4,11 +4,12 @@ import React, { useEffect, useState } from "react";
 const GuessWord = () => {
   const [guessWord, setGuessWord] = useState("");
 
-  useEffect(()=>{
-    socket.on("guessWord",(data)=>{
+  useEffect(() => {
+    socket.on("guessWord", (data) => {
+      if(data === null || data === undefined) setGuessWord("");
       setGuessWord(data);
-    })
-  },[])
+    });
+  }, []);
   const map = Array.prototype.map;
   return (
     <>
@@ -23,7 +24,7 @@ const GuessWord = () => {
           else {
             return (
               <div className="h-[30%] w-[5%] border-b-2 border-black mr-1 box-border text-black">
-                <div className="w-full h-full flex justify-center items-center">
+                <div className="w-full h-full flex justify-center items-center font-semibold">
                   {letter}
                 </div>
               </div>

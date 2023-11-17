@@ -8,6 +8,8 @@ export const GlobalStateProvider = ({ children }) => {
   const [gameSettings, setGameSettings] = useState({});
   const [presenter, setPresenter] = useState(false);
   const [myTurn, setMyTurn] = useState(false);
+  const [lobby, setLobby] = useState([]);
+  const [presenterDetails , setPresenterDetails] = useState(null);
 
   return (
     <globalStateContext.Provider
@@ -22,6 +24,10 @@ export const GlobalStateProvider = ({ children }) => {
         setPresenter,
         myTurn,
         setMyTurn,
+        lobby,
+        setLobby,
+        presenterDetails,
+        setPresenterDetails
       }}
     >
       {children}

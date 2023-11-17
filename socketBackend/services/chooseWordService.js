@@ -3,7 +3,7 @@ import { lobby } from "../global/GlobalVariables.js";
 import { io } from "../websocket.js";
 import { setFourWordsService } from "./setFourWordsService.js";
 
-export const chooseWordService = (roomId , token) => {
+export const chooseWordService = (roomId, token) => {
   let lobbyData = lobby.get(roomId);
   const currentPresenterIndex = lobbyData.presenter.index;
   const totalUsers = lobbyData.users.length;
@@ -15,16 +15,19 @@ export const chooseWordService = (roomId , token) => {
   lobbyData.presenter.index = nextPresenterIndex;
   lobbyData.presenter.socketId = presenterSocketId;
   lobbyData.presenter.drawToken = token;
-  console.log(lobbyData);
+  if(nextPresenterIndex == 0) lobbyData.roundDetails.round +=1;
   lobby.set(roomId, lobbyData);
   io.to(presenterSocketId).emit("chooseWord", { chooseWordWindow: true });
+
+  //send presenter details in the lobby
+  io.to(roomId).emit("presenterDetails",{presenterSocketId});
 
   //sending word list to the presenter
   setFourWordsService(presenterSocketId);
 
   //setting time in time panel
   const time = 20;
-  io.to(roomId).emit("setTime",time);
+  io.to(roomId).emit("setTime", time);
 
   //sending message of presenter by admin pc
   const socketId = "Moderator";

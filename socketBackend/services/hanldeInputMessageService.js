@@ -10,8 +10,12 @@ export const handleInputMessageService = (roomId, chatMsg, socket) => {
   const socketId = socket.id;
   //except presenter all participants can send messages
   if (socketId === presenterSocketId) return;
+  if (chatMsg === "" || chatMsg === null || chatMsg === undefined) return;
 
-  if (chatMsg === word) {
+  if (
+    typeof word === "string" &&
+    chatMsg.toLowerCase() === word.toLowerCase()
+  ) {
     const moderator = "moderator";
     const msg = `${socketId} Guessed the Word`;
     io.to(roomId).emit("recievedChatData", {
@@ -25,7 +29,30 @@ export const handleInputMessageService = (roomId, chatMsg, socket) => {
     const durationTime = currTime - startTime;
     const reverseTime = totalTime - durationTime;
     const score = Math.round((MaxScore * reverseTime) / totalTime);
-    console.log(score);
+
+    //setting score value in the lobbyData
+    let users = lobbyData.users;
+    const presenterSocketId = lobbyData.presenter.socketId;
+    const index = users.findIndex((user) => user.socketId === socketId);
+    const pIndex = users.findIndex(
+      (user) => user.socketId === presenterSocketId
+    );
+    if (
+      index !== -1 &&
+      index < users.length &&
+      pIndex !== -1 &&
+      pIndex < users.length
+    ) {
+      users[index].score += score;
+      users[index].thisRoundScore = score;
+      const pScore = Math.round(score / (users.length - 1));
+      users[pIndex].score += pScore;
+      if (users[pIndex].thisRoundScore === undefined)
+        users[pIndex].thisRoundScore = pScore;
+      else users[pIndex].thisRoundScore += pScore;
+      lobby.set(roomId, { ...lobbyData, users });
+    }
+    io.to(roomId).emit("lobby", users);
     return;
   }
 

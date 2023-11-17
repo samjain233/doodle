@@ -27,6 +27,8 @@ import {
 } from "./services/displayGuessWord.js";
 import { handleInputMessageService } from "./services/hanldeInputMessageService.js";
 import { setStartTimeService } from "./services/lobbyServices.js";
+import { resettingScoreService } from "./services/resettingScoreService.js";
+import { checkLastRoundService } from "./services/checkLastRoundService.js";
 
 const dataArray = shuffleArray(mixedArray);
 console.log(dataArray);
@@ -277,7 +279,7 @@ const getCurrentTime = () => {
       const { roomId, type } = timeData;
       switch (type) {
         case 1:
-          //waiting time overs and setting ,opening word choose time
+          //waiting time overs and setting ,sending presenter details to lobby ,opening word choose time
           hideWaitingSectionService(roomId);
           drawToken().then((token) => {
             chooseWordService(roomId, token);
@@ -302,10 +304,12 @@ const getCurrentTime = () => {
           displayScoreService(roomId);
           removePresenterService(roomId);
           displayCorrectWord(roomId); //removing word service called from this
-          setNextTimeService(roomId, 3);
+          const isLastRound = checkLastRoundService(roomId);
+          if (!isLastRound) setNextTimeService(roomId, 3);
           break;
         case 4:
-          //showing scores time overs , cleaning the board , jumping to case 1
+          //showing scores time overs , cleaning the board , setting thisRoundScore to 0, jumping to case 1
+          resettingScoreService(roomId);
           hideScoreService(roomId);
           setNextTimeService(roomId, 4);
           break;

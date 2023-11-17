@@ -5,6 +5,7 @@ import Settings from "./Settings";
 import BottomNavMenu from "./BottomNavMenu";
 import Time from "./Time";
 import GuessWord from "./GuessWord";
+import NavLobby from "./NavLobby";
 
 const SideNav = ({ roomId }) => {
   const [selectedSideNav, setSelectedSideNav] = useState("chats");
@@ -26,6 +27,7 @@ const SideNav = ({ roomId }) => {
           </div>
           <div className="w-full h-full row-[span_10_/_span_10] border-b border-white border-solid">
             {selectedSideNav === "chats" && <ChatArea roomId={roomId} />}
+            {selectedSideNav === "lobby" && <NavLobby />}
             {selectedSideNav === "settings" && <Settings roomId={roomId} />}
           </div>
           <div className="w-full h-full ">

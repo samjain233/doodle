@@ -16,7 +16,8 @@ const GameArea = ({ roomId }) => {
   const [wordWindow, setWordWindow] = useState(false);
   const [scoreWindow, setScoreWindow] = useState(false);
   const { setStrokeWidth } = useContext(StateContext);
-  const { setPresenter, presenter , setMyTurn } = useContext(globalStateContext);
+  const { setPresenter, presenter, setMyTurn, setPresenterDetails , presenterDetails } =
+    useContext(globalStateContext);
 
   const handleKeyPress = (e) => {
     if (e.key === "+") {
@@ -57,7 +58,7 @@ const GameArea = ({ roomId }) => {
     window.addEventListener("keyup", handleKeyUp);
     socket.on("setPresenter", ({ presenter }) => {
       setPresenter(presenter);
-      if(presenter === false) setMyTurn(false);
+      if (presenter === false) setMyTurn(false);
     });
     socket.on("waitingSection", ({ hideWaiting }) => {
       setHideWaitingSection(hideWaiting);
@@ -69,12 +70,20 @@ const GameArea = ({ roomId }) => {
     socket.on("showScore", ({ showScoreWindow }) => {
       setScoreWindow(showScoreWindow);
     });
+    socket.on("presenterDetails", ({ presenterSocketId }) => {
+      console.log(presenterSocketId);
+      setPresenterDetails(presenterSocketId);
+    });
     return () => {
       window.removeEventListener("keypress", handleKeyPress);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+
+  useEffect(() => {
+    console.log("hello",presenterDetails);
+  }, [presenterDetails]);
 
   return (
     <>
