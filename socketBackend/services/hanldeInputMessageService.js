@@ -30,6 +30,9 @@ export const handleInputMessageService = (roomId, chatMsg, socket) => {
     const reverseTime = totalTime - durationTime;
     const score = Math.round((MaxScore * reverseTime) / totalTime);
 
+    //applying chat block
+    io.to(socketId).emit("chatBlock", { chatBlock: true });
+
     //setting score value in the lobbyData
     let users = lobbyData.users;
     const presenterSocketId = lobbyData.presenter.socketId;

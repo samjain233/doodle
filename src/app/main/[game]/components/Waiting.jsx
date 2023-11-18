@@ -1,7 +1,9 @@
-import React from "react";
+import globalStateContext from "@/app/States/GlobalStateManager";
+import React, { useContext } from "react";
 import { Hourglass } from "react-loader-spinner";
 
-const Waiting = () => {
+const Waiting = (props) => {
+  const { presenterDetails } = useContext(globalStateContext);
   return (
     <>
       <div className="w-full h-full bg-gray-200/20 backdrop-blur-md">
@@ -16,7 +18,9 @@ const Waiting = () => {
             colors={["#306cce", "#72a1ed"]}
           />
           <div className="text-4xl text-gray-500 mt-8">
-            Joining WhiteBoard ...
+            {presenterDetails !== null
+              ? `${presenterDetails} is choosing a word...`
+              : "Joining Whiteboard..."}
           </div>
         </div>
       </div>

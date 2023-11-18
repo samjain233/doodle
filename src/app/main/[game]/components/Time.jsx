@@ -2,12 +2,13 @@ import { socket } from "@/app/test/socketConn";
 import React, { useState, useEffect } from "react";
 
 const Time = () => {
-  const [time, setTime] = useState(15);
+  const [time, setTime] = useState(null);
   const [dangerText, setDangerText] = useState(false);
 
   const reduceTime = () => {
     setTime((prevTime) => {
-      if (prevTime === 0) return prevTime;
+      if (prevTime === null) return null;
+      else if (prevTime === 0) return prevTime;
       else return prevTime - 1;
     });
   };
@@ -27,6 +28,11 @@ const Time = () => {
     if (time <= 10 && time % 2 === 0) setDangerText(false);
     if (time > 10) setDangerText(false);
   }, [time]);
+
+  if (time === null) {
+    return <></>;
+  }
+
   return (
     <>
       <div

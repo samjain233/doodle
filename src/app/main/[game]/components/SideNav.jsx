@@ -27,7 +27,7 @@ const SideNav = ({ roomId }) => {
           </div>
           <div className="w-full h-full row-[span_10_/_span_10] border-b border-white border-solid">
             {selectedSideNav === "chats" && <ChatArea roomId={roomId} />}
-            {selectedSideNav === "lobby" && <NavLobby />}
+            {selectedSideNav === "lobby" && <NavLobby roomId={roomId} />}
             {selectedSideNav === "settings" && <Settings roomId={roomId} />}
           </div>
           <div className="w-full h-full ">

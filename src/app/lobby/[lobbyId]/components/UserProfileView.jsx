@@ -8,6 +8,7 @@ import { socket } from "@/app/test/socketConn";
 const UserProfileView = (props) => {
   const { isAdmin } = useContext(globalStateContext);
   const handleRemoveClick = () => {
+    if(isAdmin === false) return;
     const removeUserData = {
       roomId: props.roomId,
       removedUserSocketId: props.socketId,
@@ -16,6 +17,7 @@ const UserProfileView = (props) => {
   };
 
   const handleChangeAdminClick = () => {
+    if(isAdmin === false) return;
     const newAdminUserData = {
       roomId: props.roomId,
       newAdminSocketId: props.socketId,

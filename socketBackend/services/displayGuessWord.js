@@ -18,7 +18,13 @@ export const displayGuessWord = (roomId, word) => {
 
 export const displayCorrectWord = async (roomId) => {
   const lobbyData = await lobby.get(roomId);
+  console.log(lobbyData);
   const correctWord = lobbyData.roundDetails.word;
+  console.log(correctWord);
   io.to(roomId).emit("guessWord", correctWord);
   removeWordService(roomId);
+};
+
+export const resetGuessWordDisplayService = (roomId) => {
+  io.to(roomId).emit("guessWord", "");
 };

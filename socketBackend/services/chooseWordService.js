@@ -15,12 +15,17 @@ export const chooseWordService = (roomId, token) => {
   lobbyData.presenter.index = nextPresenterIndex;
   lobbyData.presenter.socketId = presenterSocketId;
   lobbyData.presenter.drawToken = token;
-  if(nextPresenterIndex == 0) lobbyData.roundDetails.round +=1;
+  if (nextPresenterIndex == 0) lobbyData.roundDetails.round += 1;
   lobby.set(roomId, lobbyData);
   io.to(presenterSocketId).emit("chooseWord", { chooseWordWindow: true });
 
   //send presenter details in the lobby
-  io.to(roomId).emit("presenterDetails",{presenterSocketId});
+  io.to(roomId).emit("presenterDetails", { presenterSocketId });
+
+  //showing waiting screen to the rest lobby
+  io.to(roomId)
+    .except(presenterSocketId)
+    .emit("waitingSection", { hideWaiting: false });
 
   //sending word list to the presenter
   setFourWordsService(presenterSocketId);

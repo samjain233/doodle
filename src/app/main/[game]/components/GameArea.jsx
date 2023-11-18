@@ -16,8 +16,15 @@ const GameArea = ({ roomId }) => {
   const [wordWindow, setWordWindow] = useState(false);
   const [scoreWindow, setScoreWindow] = useState(false);
   const { setStrokeWidth } = useContext(StateContext);
-  const { setPresenter, presenter, setMyTurn, setPresenterDetails , presenterDetails } =
-    useContext(globalStateContext);
+  const {
+    setPresenter,
+    presenter,
+    setChatBlock,
+    setPresenterDetails,
+    presenterDetails,
+    setGameStarted,
+    gameStarted,
+  } = useContext(globalStateContext);
 
   const handleKeyPress = (e) => {
     if (e.key === "+") {
@@ -46,11 +53,11 @@ const GameArea = ({ roomId }) => {
     }
   };
 
-  // useEffect(() => {
-  //   // console.log(elements);
-  //   // console.log(roomId);
-  //   console.log(presenter);
-  // }, [presenter]);
+  useEffect(() => {
+    // console.log(elements);
+    // console.log(roomId);
+    console.log(gameStarted);
+  }, [gameStarted]);
 
   useEffect(() => {
     window.addEventListener("keypress", handleKeyPress);
@@ -58,14 +65,14 @@ const GameArea = ({ roomId }) => {
     window.addEventListener("keyup", handleKeyUp);
     socket.on("setPresenter", ({ presenter }) => {
       setPresenter(presenter);
-      if (presenter === false) setMyTurn(false);
+      if (presenter === false) setChatBlock(false);
     });
     socket.on("waitingSection", ({ hideWaiting }) => {
       setHideWaitingSection(hideWaiting);
     });
     socket.on("chooseWord", ({ chooseWordWindow }) => {
       setWordWindow(chooseWordWindow);
-      setMyTurn(true);
+      setChatBlock(true);
     });
     socket.on("showScore", ({ showScoreWindow }) => {
       setScoreWindow(showScoreWindow);
@@ -74,17 +81,20 @@ const GameArea = ({ roomId }) => {
       console.log(presenterSocketId);
       setPresenterDetails(presenterSocketId);
     });
+    socket.on("chatBlock", ({ chatBlock }) => {
+      setChatBlock(chatBlock);
+    });
+    // socket.on("StartGame", (gameLink) => {
+    //   console.log("runs");
+    //   setGameStarted(true);
+    //   router.push(gameLink);
+    // });
     return () => {
       window.removeEventListener("keypress", handleKeyPress);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
-
-  useEffect(() => {
-    console.log("hello",presenterDetails);
-  }, [presenterDetails]);
-
   return (
     <>
       <div className="relative">

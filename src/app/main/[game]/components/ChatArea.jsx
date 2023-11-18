@@ -5,7 +5,7 @@ import { socket } from "@/app/test/socketConn";
 import globalStateContext from "@/app/States/GlobalStateManager";
 
 const ChatArea = ({ roomId }) => {
-  const { chat, setChat , myTurn} = useContext(globalStateContext);
+  const { chat, setChat, chatBlock } = useContext(globalStateContext);
   const [inputChat, setInputChat] = useState("");
   const endMessageRef = useRef(null);
 
@@ -14,7 +14,7 @@ const ChatArea = ({ roomId }) => {
   };
 
   const handleInputChat = () => {
-    if (inputChat === "" || myTurn === true) return;
+    if (inputChat === "" || chatBlock === true) return;
     const data = {
       roomId: roomId,
       chatMsg: inputChat,
@@ -45,7 +45,7 @@ const ChatArea = ({ roomId }) => {
       <div className="w-full h-full bg-gray-300 ">
         <div
           className={`w-full ${
-            !myTurn ? "h-[90%]" : "h-full"
+            !chatBlock ? "h-[90%]" : "h-full"
           } transition-all overflow-y-auto py-1 [&>*:nth-child(odd)]:bg-gray-200`}
           ref={endMessageRef}
         >
@@ -61,7 +61,7 @@ const ChatArea = ({ roomId }) => {
             );
           })}
         </div>
-        {!myTurn && (
+        {!chatBlock && (
           <div className="w-full relative my-1">
             <input
               type="text"

@@ -11,5 +11,13 @@ export const resettingScoreService = (roomId) => {
   lobby.set(roomId, { ...lobbyData, users: setNewUsers });
 
   //setting round scores to 0
-  io.to(roomId).emit("lobby",setNewUsers);
+  io.to(roomId).emit("lobby", setNewUsers);
+};
+
+export const removeChatBlockService = (roomId) => {
+  io.to(roomId).emit("chatBlock", { chatBlock: false });
+};
+
+export const removeWaitingScreenService = (roomId) => {
+  io.to(roomId).emit("waitingSection", { hideWaiting: true });
 };

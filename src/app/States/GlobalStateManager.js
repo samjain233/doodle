@@ -7,9 +7,10 @@ export const GlobalStateProvider = ({ children }) => {
   const [chat, setChat] = useState([]);
   const [gameSettings, setGameSettings] = useState({});
   const [presenter, setPresenter] = useState(false);
-  const [myTurn, setMyTurn] = useState(false);
+  const [chatBlock, setChatBlock] = useState(false);
   const [lobby, setLobby] = useState([]);
-  const [presenterDetails , setPresenterDetails] = useState(null);
+  const [presenterDetails, setPresenterDetails] = useState(null);
+  const [gameStarted, setGameStarted] = useState(false);
 
   return (
     <globalStateContext.Provider
@@ -22,12 +23,14 @@ export const GlobalStateProvider = ({ children }) => {
         setGameSettings,
         presenter,
         setPresenter,
-        myTurn,
-        setMyTurn,
+        chatBlock,
+        setChatBlock,
         lobby,
         setLobby,
         presenterDetails,
-        setPresenterDetails
+        setPresenterDetails,
+        gameStarted,
+        setGameStarted,
       }}
     >
       {children}

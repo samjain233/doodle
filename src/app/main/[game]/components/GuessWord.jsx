@@ -6,8 +6,9 @@ const GuessWord = () => {
 
   useEffect(() => {
     socket.on("guessWord", (data) => {
-      if(data === null || data === undefined) setGuessWord("");
-      setGuessWord(data);
+      // console.log(data);
+      if (data === null || data === undefined) setGuessWord("");
+      else setGuessWord(data);
     });
   }, []);
   const map = Array.prototype.map;

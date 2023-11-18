@@ -6,17 +6,25 @@ import globalStateContext from "@/app/States/GlobalStateManager";
 import { socket } from "@/app/test/socketConn";
 import { FaPencilAlt } from "react-icons/fa";
 
-const NavLobby = () => {
-  const { lobby, setLobby, presenterDetails } = useContext(globalStateContext);
+const NavLobby = (props) => {
+  const { lobby, setLobby, presenterDetails, isAdmin } =
+    useContext(globalStateContext);
+
+  const handleRemoveUser = (removedUserId)=>{
+    if (isAdmin === false) return;
+    const removeUserData = {
+      roomId: props.roomId,
+      removedUserSocketId: removedUserId,
+    };
+    socket.emit("removeUser", removeUserData);
+  }
+
   useEffect(() => {
     socket.on("lobby", (lobbyUsers) => {
       setLobby(lobbyUsers);
     });
   }, []);
 
-  useEffect(() => {
-    console.log(presenterDetails);
-  }, [presenterDetails]);
   const socketId = socket.id;
   return (
     <>
@@ -25,10 +33,12 @@ const NavLobby = () => {
           return (
             <div
               className={`shadow-sm my-2 rounded bg-gray-200 ${
-                user.thisRoundScore &&
+                user.thisRoundScore !== undefined &&
+                user.thisRoundScore !== null &&
                 user.thisRoundScore > 0 &&
-                user.socketId !== presenterDetails &&
-                "bg-[#70e000]"
+                user.socketId !== presenterDetails
+                  ? "bg-[#bcff78]"
+                  : "bg-gray-200"
               } flex flex-row `}
             >
               <div className="p-2">
@@ -64,7 +74,14 @@ const NavLobby = () => {
                     <FaPencilAlt />
                   </div>
                 )}
-                <IoIosRemoveCircle />
+                {isAdmin && !user.isAdmin && (
+                  <div
+                    className="cursor-pointer hover:text-red-500 transition-all"
+                    onClick={() => handleRemoveUser(user.socketId)}
+                  >
+                    <IoIosRemoveCircle />
+                  </div>
+                )}
               </div>
             </div>
           );

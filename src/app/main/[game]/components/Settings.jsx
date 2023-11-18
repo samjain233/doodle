@@ -7,7 +7,7 @@ import { AiOutlineLeftCircle } from "react-icons/ai";
 import { AiOutlineRightCircle } from "react-icons/ai";
 
 const Settings = ({ roomId }) => {
-  const { gameSettings, setGameSettings, isAdmin } =
+  const { gameSettings, setGameSettings, isAdmin , gameStarted } =
     useContext(globalStateContext);
   useEffect(() => {
     console.log(roomId);
@@ -18,7 +18,8 @@ const Settings = ({ roomId }) => {
   }, []);
 
   useEffect(() => {
-    if (isAdmin === true) {
+    console.log(gameStarted);
+    if (isAdmin === true && gameStarted === false) {
       console.log(gameSettings);
       const data = {
         roomId: roomId,
@@ -35,7 +36,7 @@ const Settings = ({ roomId }) => {
           <div>Players</div>
           <div className="h-full flex flex-row justify-center items-center">
             <div className="mx-4">{gameSettings.players}</div>
-            {isAdmin && (
+            {isAdmin && !gameStarted &&  (
               <div>
                 <div
                   className="mr-1 text-xl cursor-pointer"
@@ -71,7 +72,7 @@ const Settings = ({ roomId }) => {
           <div>Rounds</div>
           <div className="h-full flex flex-row justify-center items-center">
             <div className="mx-4">{gameSettings.rounds}</div>
-            {isAdmin && (
+            {isAdmin && !gameStarted && (
               <div>
                 <div
                   className="mr-1 text-xl cursor-pointer"
@@ -107,7 +108,7 @@ const Settings = ({ roomId }) => {
           <div>Drawing duration</div>
           <div className="h-full flex flex-row justify-center items-center">
             <div className="mx-4">{gameSettings.duration}s</div>
-            {isAdmin && (
+            {isAdmin && !gameStarted && (
               <div>
                 <div
                   className="mr-1 text-xl cursor-pointer"
@@ -143,7 +144,7 @@ const Settings = ({ roomId }) => {
           <div>Hints</div>
           <div className="h-full flex flex-row justify-center items-center">
             <div className="mx-4">{gameSettings.hints}</div>
-            {isAdmin && (
+            {isAdmin && !gameStarted && (
               <div>
                 <div
                   className="mr-1 text-xl cursor-pointer"
@@ -178,7 +179,7 @@ const Settings = ({ roomId }) => {
         <div className="rounded my-1 flex flex-row p-3 justify-between items-center">
           <div>Room Visibility</div>
           <div className="h-full flex flex-row justify-center items-center">
-            {isAdmin && (
+            {isAdmin && !gameStarted && (
               <div
                 className="text-xl cursor-pointer"
                 onClick={() => {
@@ -197,7 +198,7 @@ const Settings = ({ roomId }) => {
               </div>
             )}
             <div className="mx-1">{gameSettings.visibility}</div>
-            {isAdmin && (
+            {isAdmin && !gameStarted && (
               <div
                 className="text-xl cursor-pointer"
                 onClick={() => {

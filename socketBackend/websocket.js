@@ -11,27 +11,30 @@ import {
   chooseWordService,
   endWordService,
 } from "./services/chooseWordService.js";
-import { setNextTimeService } from "./services/setNextTimeServie.js";
+import {
+  checkTimeTokenService,
+  setNextTimeService,
+} from "./services/setNextTimeServie.js";
 import {
   displayScoreService,
   hideScoreService,
 } from "./services/displayScoreService.js";
 import { drawToken } from "./utils/drawToken.js";
 import { failToSelectWord } from "./services/messageService.js";
-import { shuffleArray } from "./utils/shuffleArray.js";
-import mixedArray from "./utils/arrayData.js";
-import { setFourWordsService } from "./services/setFourWordsService.js";
 import {
   displayCorrectWord,
   displayGuessWord,
+  resetGuessWordDisplayService,
 } from "./services/displayGuessWord.js";
 import { handleInputMessageService } from "./services/hanldeInputMessageService.js";
 import { setStartTimeService } from "./services/lobbyServices.js";
-import { resettingScoreService } from "./services/resettingScoreService.js";
+import {
+  removeChatBlockService,
+  removeWaitingScreenService,
+  resettingScoreService,
+} from "./services/resettingScoreService.js";
 import { checkLastRoundService } from "./services/checkLastRoundService.js";
-
-const dataArray = shuffleArray(mixedArray);
-console.log(dataArray);
+import { removeUserService } from "./services/removeUserService.js";
 
 const httpServer = createServer();
 
@@ -64,6 +67,9 @@ io.on("connection", (socket) => {
       lobby.set(roomId, { ...tLobbyData, users });
     } else {
       lobby.set(roomId, {
+        game: {
+          isStarted: false,
+        },
         admin: {
           socketId: socket.id,
         },
@@ -97,7 +103,6 @@ io.on("connection", (socket) => {
     }
     const lobbyData = lobby.get(roomId);
     userLobbies.set(socket.id, roomId);
-    console.log(lobbyData);
     io.to(roomId).emit("lobby", lobbyData.users);
     // io.to(roomId).emit("lobbySettings", lobbyData.settings);
   });
@@ -109,28 +114,27 @@ io.on("connection", (socket) => {
 
   socket.on("changeLobbySettings", ({ roomId, gameSettings }) => {
     const lobbyData = lobby.get(roomId);
-    lobbyData.settings = gameSettings;
-    lobby.set(roomId, { ...lobbyData });
-    socket.to(roomId).emit("lobbySettings", lobbyData.settings);
+    if (
+      lobbyData.admin.socketId === socket.id &&
+      lobbyData.game.isStarted === false
+    ) {
+      lobbyData.settings = gameSettings;
+      socket.to(roomId).emit("lobbySettings", lobbyData.settings);
+    }
   });
 
+  //controls start of gameplay
   socket.on("controlStartGame", (roomId) => {
-    const currDate = new Date();
-    const currTime = currDate.getTime();
-    const currTimeRounded = currTime - (currTime % 1000);
-    //setting whiteBoard Joining time
-    const futureTime = currTimeRounded + 10000;
-    console.log(futureTime);
-    const setData = {
-      roomId: roomId,
-      type: 1,
-    };
-    const prevTimeData = lobbyTime.get(futureTime);
-    if (prevTimeData === undefined || prevTimeData === null)
-      lobbyTime.set(futureTime, [setData]);
-    else lobbyTime.set(futureTime, [...prevTimeData, setData]);
-    const nextPageUrl = "/main/" + roomId;
-    io.to(roomId).emit("StartGame", nextPageUrl);
+    const lobbyData = lobby.get(roomId);
+    //checking of admin socketId
+    if (socket.id === lobbyData.admin.socketId) {
+      setNextTimeService(roomId, 0);
+      const nextPageUrl = "/main/" + roomId;
+      io.to(roomId).emit("StartGame", nextPageUrl);
+      //chaging game isStarted to true;
+      lobbyData.game.isStarted = true;
+      lobby.set(roomId, lobbyData);
+    }
   });
 
   socket.on("whiteBoardDrawing", (data) => {
@@ -156,6 +160,7 @@ io.on("connection", (socket) => {
     if (presenterSocketId === socket.id) {
       endWordService(roomId);
       setStartTimeService(roomId);
+      removeWaitingScreenService(roomId);
       displayGuessWord(roomId, word);
       setPresenterService(roomId);
       setNextTimeService(roomId, 2);
@@ -192,34 +197,16 @@ io.on("connection", (socket) => {
   });
 
   socket.on("removeUser", async (data) => {
-    const roomId = userLobbies.get(socket.id);
-    if (roomId !== undefined && roomId !== null) {
-      const tlobbyData = lobby.get(roomId);
-      const adminSocketId = tlobbyData.admin.socketId;
-      if (adminSocketId === socket.id) {
-        const users = tlobbyData.users;
-        const index = users.findIndex(
-          (user) => user.socketId === data.removedUserSocketId
-        );
-        if (index !== -1) {
-          users.splice(index, 1);
-          lobby.set(roomId, { ...tlobbyData, users });
-          userLobbies.delete(data.removedUserSocketId);
-          io.to(roomId).emit("lobby", users);
-          const sockets = await io.in(roomId).fetchSockets();
-          // console.log(sockets);
-          sockets.forEach((s) => {
-            if (s.id === data.removedUserSocketId) {
-              s.disconnect(true);
-            }
-          });
-        }
-      }
+    const { roomId, removedUserSocketId } = data;
+    const tlobbyData = lobby.get(roomId);
+    const adminSocketId = tlobbyData.admin.socketId;
+    //checking amdin Credentials
+    if (adminSocketId === socket.id) {
+      removeUserService(roomId, removedUserSocketId);
     }
   });
 
   socket.on("disconnect", async () => {
-    // console.log(io.engine.clientsCount);
     const roomId = userLobbies.get(socket.id);
     if (roomId !== undefined && roomId !== null) {
       const tlobbyData = lobby.get(roomId);
@@ -245,78 +232,62 @@ io.on("connection", (socket) => {
   });
 });
 
-const setPresenter = (roomId) => {
-  let lobbyData = lobby.get(roomId);
-  const prevPresenterIndex = lobbyData.presenter.index;
-  const newPresenterIndex = prevPresenterIndex + 1;
-  const users = lobbyData.users;
-  const presenterUser = users[newPresenterIndex];
-  const presenterUserSocketId = presenterUser.socketId;
-  lobbyData.presenter.index = newPresenterIndex;
-  lobby.set(roomId, lobbyData);
-  const currDate = new Date();
-  const currTime = currDate.getTime();
-  const currTimeRounded = currTime - (currTime % 1000);
-  const futureTime = currTimeRounded + 20000;
-  console.log(futureTime);
-  const setData = {
-    roomId: roomId,
-    type: "endRound",
-  };
-  lobbyTime.set(futureTime, setData);
-  io.to(presenterUserSocketId).emit("setPresenter", { setPresenter: true });
-};
-
 const getCurrentTime = () => {
   const currDate = new Date();
   const currTime = currDate.getTime();
   const currTimeRounded = currTime - (currTime % 1000);
-  console.log(currTimeRounded);
-  if (lobbyTime.has(currTimeRounded) === true) {
-    const timeDataArray = lobbyTime.get(currTimeRounded);
-    lobbyTime.delete(currTimeRounded);
-    timeDataArray.forEach((timeData) => {
-      const { roomId, type } = timeData;
-      switch (type) {
-        case 1:
-          //waiting time overs and setting ,sending presenter details to lobby ,opening word choose time
-          hideWaitingSectionService(roomId);
-          drawToken().then((token) => {
-            chooseWordService(roomId, token);
-            setNextTimeService(roomId, 1, token);
-          });
-          break;
-        case 2:
-          //choosing word time overs , showing scores
-          const dToken = getDrawToken(roomId);
-          console.log(dToken);
-          console.log(timeData.token);
-          if (dToken === timeData.token) {
-            endWordService(roomId);
-            failToSelectWord(roomId);
-            displayScoreService(roomId);
-            removePresenterService(roomId);
-            setNextTimeService(roomId, 3);
+  const timeArray = [currTimeRounded, currTimeRounded - 1000];
+  timeArray.forEach((time) => {
+    if (lobbyTime.has(time) === true) {
+      const timeDataArray = lobbyTime.get(time);
+      lobbyTime.delete(time);
+      timeDataArray.forEach((timeData) => {
+        const { roomId, type, timeToken } = timeData;
+        checkTimeTokenService(roomId, timeToken).then((res) => {
+          //exiting if time token expires
+          if (res === false) return;
+          switch (type) {
+            case 1:
+              //waiting time overs and setting ,sending presenter details to lobby ,opening word choose time
+              hideWaitingSectionService(roomId);
+              drawToken().then((token) => {
+                chooseWordService(roomId, token);
+                setNextTimeService(roomId, 1, token);
+              });
+              break;
+            case 2:
+              //choosing word time overs , showing scores
+              const dToken = getDrawToken(roomId);
+              if (dToken === timeData.token) {
+                endWordService(roomId);
+                failToSelectWord(roomId);
+                removeWaitingScreenService(roomId);
+                displayScoreService(roomId);
+                removePresenterService(roomId);
+                setNextTimeService(roomId, 3);
+              }
+              break;
+            case 3:
+              //drawing time overs , showing scores ,showing correct answer, removing chat block, unsetting of word, removing presenter
+              displayScoreService(roomId);
+              removePresenterService(roomId);
+              displayCorrectWord(roomId); //removing word service called from this
+              removeChatBlockService(roomId);
+              setNextTimeService(roomId, 3);
+              break;
+            case 4:
+              //showing scores time overs ,removing the word , cleaning the board , setting thisRoundScore to 0, jumping to case 1
+              resettingScoreService(roomId);
+              resetGuessWordDisplayService(roomId);
+              hideScoreService(roomId);
+              const isLastRound = checkLastRoundService(roomId);
+              if (!isLastRound) setNextTimeService(roomId, 4);
+              break;
           }
-          break;
-        case 3:
-          //drawing time overs , showing scores ,showing correct answer, unsetting of word, removing presenter
-          displayScoreService(roomId);
-          removePresenterService(roomId);
-          displayCorrectWord(roomId); //removing word service called from this
-          const isLastRound = checkLastRoundService(roomId);
-          if (!isLastRound) setNextTimeService(roomId, 3);
-          break;
-        case 4:
-          //showing scores time overs , cleaning the board , setting thisRoundScore to 0, jumping to case 1
-          resettingScoreService(roomId);
-          hideScoreService(roomId);
-          setNextTimeService(roomId, 4);
-          break;
-      }
-    });
-    // setPresenter(lobbyTimeData.roomId);
-  }
+        });
+      });
+    }
+  });
 };
 
 const oneSecondTimeInterval = setInterval(getCurrentTime, 1000);

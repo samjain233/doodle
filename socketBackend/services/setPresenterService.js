@@ -9,7 +9,7 @@ export const setPresenterService = (roomId) => {
 
   //setting drawToken to null
   lobbyData.presenter.drawToken = null;
-  lobby.set(roomId,lobbyData);
+  lobby.set(roomId, lobbyData);
 
   //setting time in time panel
   const time = lobbyData.settings.duration;
@@ -30,9 +30,14 @@ export const removePresenterService = (roomId) => {
   lobby.set(roomId, lobbyData);
 };
 
-export const getDrawToken = (roomId) =>{
+export const getDrawToken = (roomId) => {
   let lobbyData = lobby.get(roomId);
   console.log(lobbyData);
   const drawToken = lobbyData.presenter.drawToken;
   return drawToken;
-}
+};
+
+export const decrementPresenterIndex = (roomId) => {
+  const lobbyData = lobby.get(roomId);
+  lobbyData.presenter.index = lobbyData.presenter.index - 1;
+};
