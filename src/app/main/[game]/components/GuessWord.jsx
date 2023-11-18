@@ -1,8 +1,9 @@
+import globalStateContext from "@/app/States/GlobalStateManager";
 import { socket } from "@/app/test/socketConn";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 const GuessWord = () => {
-  const [guessWord, setGuessWord] = useState("");
+  const {guessWord , setGuessWord} = useContext(globalStateContext);
 
   useEffect(() => {
     socket.on("guessWord", (data) => {

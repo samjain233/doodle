@@ -11,6 +11,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [lobby, setLobby] = useState([]);
   const [presenterDetails, setPresenterDetails] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
+  const [guessWord, setGuessWord] = useState("");
 
   return (
     <globalStateContext.Provider
@@ -31,6 +32,8 @@ export const GlobalStateProvider = ({ children }) => {
         setPresenterDetails,
         gameStarted,
         setGameStarted,
+        guessWord,
+        setGuessWord
       }}
     >
       {children}

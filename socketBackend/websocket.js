@@ -35,6 +35,7 @@ import {
 } from "./services/resettingScoreService.js";
 import { checkLastRoundService } from "./services/checkLastRoundService.js";
 import { removeUserService } from "./services/removeUserService.js";
+import { hintService } from "./services/hintService.js";
 
 const httpServer = createServer();
 
@@ -96,6 +97,7 @@ io.on("connection", (socket) => {
             userName: "raja",
             isAdmin: true,
             score: 0,
+            hintsUsed: 0,
           },
         ],
       });
@@ -170,6 +172,13 @@ io.on("connection", (socket) => {
     }
   });
 
+  // hints controller
+  socket.on("useHint", ({ roomId, userWord }) => {
+    const socketId = socket.id;
+    hintService(roomId, userWord, socketId);
+  });
+
+  //only for admin
   socket.on("changeAdmin", (data) => {
     const roomId = userLobbies.get(socket.id);
     if (roomId !== undefined && roomId !== null) {
@@ -196,6 +205,7 @@ io.on("connection", (socket) => {
     }
   });
 
+  //only for admin
   socket.on("removeUser", async (data) => {
     const { roomId, removedUserSocketId } = data;
     const tlobbyData = lobby.get(roomId);
