@@ -1,5 +1,10 @@
 import { lobby } from "../global/GlobalVariables.js";
 import { io } from "../websocket.js";
+import { displayCorrectWord } from "./displayGuessWord.js";
+import { displayScoreService } from "./displayScoreService.js";
+import { removeChatBlockService } from "./resettingScoreService.js";
+import { setNextTimeService } from "./setNextTimeServie.js";
+import { removePresenterService } from "./setPresenterService.js";
 
 const MaxScore = 400;
 
@@ -56,6 +61,31 @@ export const handleInputMessageService = (roomId, chatMsg, socket) => {
       lobby.set(roomId, { ...lobbyData, users });
     }
     io.to(roomId).emit("lobby", users);
+
+    //checking if all the users has guessed the word
+    let noOfUsershasGuessedTheWord = 0;
+    users.forEach((user) => {
+      console.log(user.thisRoundScore);
+      if (
+        user.thisRoundScore !== null &&
+        user.thisRoundScore !== undefined &&
+        user.thisRoundScore > 0
+      ) {
+        noOfUsershasGuessedTheWord += 1;
+      }
+    });
+    if (noOfUsershasGuessedTheWord === users.length) {
+      displayScoreService(roomId);
+      removePresenterService(roomId);
+      displayCorrectWord(roomId);
+      removeChatBlockService(roomId);
+
+      //resetting the time to null in the lobby
+      io.to(roomId).emit("setTime", 0);
+
+      setNextTimeService(roomId, 3);
+    }
+
     return;
   }
 

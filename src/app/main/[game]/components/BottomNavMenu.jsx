@@ -6,8 +6,7 @@ import globalStateContext from "@/app/States/GlobalStateManager";
 import { AiFillBulb } from "react-icons/ai";
 
 const BottomNavMenu = ({ roomId }) => {
-
-  const [round , setRound] = useState("");
+  const [round, setRound] = useState("");
 
   const {
     setGameStarted,
@@ -21,7 +20,6 @@ const BottomNavMenu = ({ roomId }) => {
     setRemainingHints,
   } = useContext(globalStateContext);
 
-
   const router = useRouter();
 
   useEffect(() => {
@@ -33,9 +31,9 @@ const BottomNavMenu = ({ roomId }) => {
       console.log(data);
       setRemainingHints(data);
     });
-    socket.on("roundNo",(data)=>{
+    socket.on("roundNo", (data) => {
       setRound(data);
-    })
+    });
   }, []);
 
   const handleStartClick = () => {
@@ -103,7 +101,7 @@ const BottomNavMenu = ({ roomId }) => {
         >
           <AiFillBulb />
         </div>
-        <div className="p-1 mr-2 text-sm bg-gray-400 text-white rounded-full">
+        <div className="p-1 mr-2 text-sm bg-gray-500 text-white rounded-full">
           {remainingHints}
         </div>
         <div className="h-[80%] border-r border-white border-solid"></div>

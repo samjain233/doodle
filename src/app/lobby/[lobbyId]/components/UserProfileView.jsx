@@ -4,11 +4,12 @@ import React from "react";
 import img from "./user.png";
 import globalStateContext from "@/app/States/GlobalStateManager";
 import { socket } from "@/app/test/socketConn";
+import { GiUpgrade } from "react-icons/gi";
 
 const UserProfileView = (props) => {
   const { isAdmin } = useContext(globalStateContext);
   const handleRemoveClick = () => {
-    if(isAdmin === false) return;
+    if (isAdmin === false) return;
     const removeUserData = {
       roomId: props.roomId,
       removedUserSocketId: props.socketId,
@@ -17,7 +18,7 @@ const UserProfileView = (props) => {
   };
 
   const handleChangeAdminClick = () => {
-    if(isAdmin === false) return;
+    if (isAdmin === false) return;
     const newAdminUserData = {
       roomId: props.roomId,
       newAdminSocketId: props.socketId,
@@ -45,7 +46,7 @@ const UserProfileView = (props) => {
               className="h-[1.5em] w-[1.5em] text-xs bg-green-600 flex justify-center items-center rounded-full absolute bottom-[35%] right-[15%] cursor-pointer hover:shadow-md hover:h-[1.75em] hover:w-[1.75em] transition-all"
               onClick={handleChangeAdminClick}
             >
-              *
+              <GiUpgrade />
             </div>
           )}
           {!props.isAdmin && isAdmin && (

@@ -53,7 +53,7 @@ const ChatArea = ({ roomId }) => {
             return (
               <div
                 key={index}
-                className="text-sm text-black px-1 py-1 rounded-xs"
+                className="text-xs text-black px-1 py-1 rounded-xs"
               >
                 <span className="font-semibold text-xs">{c.socketId}:</span>{" "}
                 {c.chatMsg}

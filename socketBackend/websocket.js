@@ -88,8 +88,8 @@ io.on("connection", (socket) => {
         settings: {
           players: 8,
           rounds: 3,
-          duration: 10,
-          hints: 3,
+          duration: 90,
+          hints: 10,
           visibility: "Private",
         },
         roundDetails: {
