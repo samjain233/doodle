@@ -27,8 +27,10 @@ const UserDetail = () => {
     const findGameApiUrl = process.env.NEXT_PUBLIC_SERVER + "/api/findgame";
     const response = await fetch(findGameApiUrl);
     const { room, msg } = await response.json();
+    console.log(room);
+    console.log(msg);
     if (room !== null) {
-      socket.emit("socketConn", { roomId: room });
+      socket.emit("socketConn", { roomId: room, userName: userName });
     }
   };
 

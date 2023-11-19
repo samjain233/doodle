@@ -3,7 +3,7 @@ import { createAvatar } from "@dicebear/core";
 import { avataaars } from "@dicebear/collection";
 import globalStateContext from "../States/GlobalStateManager";
 
-const Avatar = (props) => {
+const Avatar = () => {
   const { userName } = useContext(globalStateContext);
   const [dataUri, setDataUri] = useState("");
 

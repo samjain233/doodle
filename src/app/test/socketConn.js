@@ -1,7 +1,7 @@
 // import { useEffect } from "react";
 import io from "socket.io-client";
 
-const server = "https://trendbyte.tech/";
+const server = process.env.NEXT_PUBLIC_SERVER;
 
 const connectionOptions = {
   "force new connection": true,

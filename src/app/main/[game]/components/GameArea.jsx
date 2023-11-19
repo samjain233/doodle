@@ -67,7 +67,9 @@ const GameArea = ({ roomId }) => {
     window.addEventListener("keyup", handleKeyUp);
 
     //checking for socket connection established or not
+    console.log(socket.connected)
     if (socket.connected === false) {
+      console.log("runs");
       socket.disconnect();
       socket.removeAllListeners();
       //sending user to home page

@@ -1,12 +1,13 @@
-import { useContext } from "react";
-import Image from "next/image";
+import { useContext, useEffect, useState } from "react";
 import React from "react";
-import img from "./user.png";
 import globalStateContext from "@/app/States/GlobalStateManager";
 import { socket } from "@/app/test/socketConn";
 import { GiUpgrade } from "react-icons/gi";
+import { createAvatar } from "@dicebear/core";
+import { avataaars } from "@dicebear/collection";
 
 const UserProfileView = (props) => {
+  const [dataUri, setDataUri] = useState("");
   const { isAdmin } = useContext(globalStateContext);
   const handleRemoveClick = () => {
     if (isAdmin === false) return;
@@ -26,12 +27,21 @@ const UserProfileView = (props) => {
     socket.emit("changeAdmin", newAdminUserData);
   };
 
+  useEffect(() => {
+    const avatar = createAvatar(avataaars, {
+      seed: props.userName,
+    });
+    avatar.toDataUri().then((data) => {
+      setDataUri(data);
+    });
+  }, []);
+
   return (
     <>
       <div className="h-full w-full p-4">
         <div className="relative flex flex-col items-center justify-center">
-          <Image
-            src={img}
+          <img
+            src={dataUri}
             height={100}
             width={100}
             alt="User Profile Image"
@@ -62,7 +72,7 @@ const UserProfileView = (props) => {
               A
             </div>
           )}
-          <div className="text-black my-2">UserName</div>
+          <div className="text-black my-2">{props.userName}</div>
         </div>
       </div>
     </>

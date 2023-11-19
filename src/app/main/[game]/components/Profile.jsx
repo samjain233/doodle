@@ -1,11 +1,21 @@
-import React from "react";
-import img from "./user.png";
-import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import { socket } from "@/app/test/socketConn";
+import { createAvatar } from "@dicebear/core";
+import { avataaars } from "@dicebear/collection";
 
 const Profile = (props) => {
   const socketId = socket.id;
-  console.log(socketId);
+  const [dataUri, setDataUri] = useState("");
+  useEffect(()=>{
+    const avatar = createAvatar(avataaars, {
+      seed: props.userName,
+    });
+    avatar.toDataUri().then((data) => {
+      setDataUri(data);
+    });
+  },[])
+  
+
   return (
     <>
       <div className={`h-full w-full p-4 `}>
@@ -14,8 +24,8 @@ const Profile = (props) => {
             props.socketId === socketId ? "bg-gray-200" : ""
           }`}
         >
-          <Image
-            src={img}
+          <img
+            src={dataUri}
             height={100}
             width={100}
             alt="User Profile Image"
@@ -28,7 +38,7 @@ const Profile = (props) => {
             </div>
           )}
 
-          <div className="text-black text-xl mt-2">UserName</div>
+          <div className="text-black text-xl mt-2">{props.userName}</div>
           <div className="text-black text-xl font-semibold mt-1">
             {props.score}
           </div>

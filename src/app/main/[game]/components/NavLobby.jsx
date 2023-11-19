@@ -1,10 +1,9 @@
 import React, { useContext, useEffect } from "react";
-import img from "./user.png";
-import Image from "next/image";
 import { IoIosRemoveCircle } from "react-icons/io";
 import globalStateContext from "@/app/States/GlobalStateManager";
 import { socket } from "@/app/test/socketConn";
 import { FaPencilAlt } from "react-icons/fa";
+import NavLobbyAvatar from "./NavLobbyAvatar";
 
 const NavLobby = (props) => {
   const { lobby, setLobby, presenterDetails, isAdmin } =
@@ -32,7 +31,7 @@ const NavLobby = (props) => {
         {lobby.map((user) => {
           return (
             <div
-            key={user.socketId}
+              key={user.socketId}
               className={`shadow-sm my-2 rounded ${
                 user.thisRoundScore !== undefined &&
                 user.thisRoundScore !== null &&
@@ -42,18 +41,12 @@ const NavLobby = (props) => {
                   : "bg-gray-200"
               } flex flex-row `}
             >
-              <div className="p-2">
-                <Image
-                  src={img}
-                  height={100}
-                  width={100}
-                  alt="User Profile Image"
-                  className="rounded-full object-cover w-[80px] border border-black"
-                />
+              <div className="p-1">
+                <NavLobbyAvatar userName={user.userName} />
               </div>
               <div className="text-gray-600 p-2 flex flex-col justify-center">
                 <div className="font-semibold text-xl">
-                  username
+                  {user.userName}
                   {socketId === user.socketId && (
                     <span className="text-sm"> (you)</span>
                   )}
