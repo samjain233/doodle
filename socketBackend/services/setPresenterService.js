@@ -1,6 +1,6 @@
 //setting up a new presenter
 import { lobby } from "../global/GlobalVariables.js";
-import { io } from "../websocket.js";
+import { io } from "../server.js";
 
 export const setPresenterService = (roomId) => {
   let lobbyData = lobby.get(roomId);

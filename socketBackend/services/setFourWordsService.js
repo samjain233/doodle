@@ -1,5 +1,5 @@
+import { io } from "../server.js";
 import { dataArray } from "../utils/shuffleArray.js";
-import { io } from "../websocket.js";
 
 export const setFourWordsService = (presenterSocketId) => {
   const index = Math.floor(Math.random() * dataArray.length);

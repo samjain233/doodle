@@ -32,6 +32,7 @@ const NavLobby = (props) => {
         {lobby.map((user) => {
           return (
             <div
+            key={user.socketId}
               className={`shadow-sm my-2 rounded ${
                 user.thisRoundScore !== undefined &&
                 user.thisRoundScore !== null &&

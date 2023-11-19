@@ -1,4 +1,5 @@
-import { io } from "../websocket.js";
+import { io } from "../server.js";
+
 
 export const failToSelectWord = (roomId) => {
   //sending message of failing to choose a word by admin pc

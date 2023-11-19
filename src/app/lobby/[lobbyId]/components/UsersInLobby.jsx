@@ -3,31 +3,19 @@ import UserProfileView from "./UserProfileView";
 import lobbyStateContext from "../States/lobbyStateManager";
 import { socket } from "@/app/test/socketConn";
 import globalStateContext from "@/app/States/GlobalStateManager";
+import { useRouter } from "next/navigation";
 
 const UsersInLobby = ({ roomId }) => {
-  const { isAdmin, setAdmin , lobby, setLobby} = useContext(globalStateContext);
-  const data = {
-    userName: "helloSam",
-    roomId: roomId,
-  };
+  const router = useRouter();
+  const { isAdmin, setAdmin, lobby, setLobby } = useContext(globalStateContext);
   useEffect(() => {
-    socket.emit("userJoined", data);
-    socket.on("userIsJoined", (userStatus) => {
-      //   console.log(userStatus);
-      socket.emit("joinLobby", data);
-    });
-
-    socket.on("setAdmin", (data) => {
-      if (data.setAdmin === true) setAdmin(true);
-      else setAdmin(false);
-    });
-
-    socket.on("lobby", (lobbyUsers) => {
-      setLobby(lobbyUsers);
-    });
-    socket.on("disconnect", () => {
-      console.log(socket.connected);
-    });
+    //checking for socket connection established or not
+    if (socket.connected === false) {
+      socket.disconnect();
+      socket.removeAllListeners();
+      //sending user to home page
+      router.push("/");
+    }
   }, []);
 
   return (

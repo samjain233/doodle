@@ -1,5 +1,3 @@
-import { createServer } from "http";
-import { Server } from "socket.io";
 import { lobby, lobbyTime, userLobbies } from "./global/GlobalVariables.js";
 import { hideWaitingSectionService } from "./services/hideWaitingSectionService.js";
 import {
@@ -41,32 +39,44 @@ import {
   hintService,
 } from "./services/hintService.js";
 import { cleaningBoardService } from "./services/cleaningBoardService.js";
-
-const httpServer = createServer();
-
-export const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
+import { io } from "./server.js";
 
 io.on("connection", (socket) => {
-  socket.on("userJoined", (data) => {
-    const { roomId } = data;
-    socket.join(roomId);
-    socket.emit("userIsJoined", { success: true });
+  socket.on("socketConn", (data) => {
+    const { roomId, userName } = data;
+    const lobbyData = lobby.get(roomId);
+    if (lobbyData === null || lobbyData === undefined) {
+      socket.join(roomId);
+      socket.emit("statusSocketConn", {
+        success: true,
+        roomId: roomId,
+        username: userName,
+      });
+    } else {
+      const totalUsers = lobbyData.settings.players;
+      const currUsers = lobbyData.users.length;
+      if (currUsers < totalUsers) {
+        socket.join(roomId);
+        socket.emit("statusSocketConn", {
+          success: true,
+          roomId: roomId,
+          username: userName,
+        });
+      } else {
+        socket.emit("statusSocketConn", { success: false });
+      }
+    }
   });
 
   socket.on("joinLobby", (data) => {
-    const { roomId } = data;
+    const { roomId, userName } = data;
     if (lobby.has(roomId)) {
       const tLobbyData = lobby.get(roomId);
       const { users } = tLobbyData;
       users.push({
         socketId: socket.id,
         userId: "imported from MongoDb",
-        userName: "Bekarraja",
+        userName: userName,
         isAdmin: false,
         score: 0,
         hintsUsed: 0,
@@ -100,7 +110,7 @@ io.on("connection", (socket) => {
           {
             socketId: socket.id,
             userId: "imported from MongoDb",
-            userName: "raja",
+            userName: userName,
             isAdmin: true,
             score: 0,
             hintsUsed: 0,
@@ -311,10 +321,6 @@ const getCurrentTime = () => {
 };
 
 const oneSecondTimeInterval = setInterval(getCurrentTime, 1000);
-
-httpServer.listen(5000, () => {
-  console.log("server is listening to the port 5000");
-});
 
 //1 - white Board joining time
 //2 - word choosing time - 20 seconds for choosing word

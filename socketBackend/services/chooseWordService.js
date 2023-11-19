@@ -1,6 +1,6 @@
 //selecting a new presenter and opening and closing choosing window code
 import { lobby } from "../global/GlobalVariables.js";
-import { io } from "../websocket.js";
+import { io } from "../server.js";
 import { setFourWordsService } from "./setFourWordsService.js";
 
 export const chooseWordService = (roomId, token) => {

@@ -1,5 +1,5 @@
 import { lobby } from "../global/GlobalVariables.js";
-import { io } from "../websocket.js";
+import { io } from "../server.js";
 
 export const displayScoreService = (roomId) => {
   const roomdata = lobby.get(roomId);

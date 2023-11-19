@@ -1,5 +1,5 @@
 import { lobby } from "../global/GlobalVariables.js";
-import { io } from "../websocket.js";
+import { io } from "../server.js";
 import { displayCorrectWord } from "./displayGuessWord.js";
 import { displayScoreService } from "./displayScoreService.js";
 import { removeChatBlockService } from "./resettingScoreService.js";

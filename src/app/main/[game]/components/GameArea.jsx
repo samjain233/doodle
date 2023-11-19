@@ -9,8 +9,10 @@ import Waiting from "./Waiting";
 import ChooseWord from "./ChooseWord";
 import Score from "./Score";
 import globalStateContext from "@/app/States/GlobalStateManager";
+import { useRouter } from "next/navigation";
 
 const GameArea = ({ roomId }) => {
+  const router = useRouter();
   const [isShiftPressed, setShiftPressed] = useState(false);
   const [hideWaitingSection, setHideWaitingSection] = useState(false);
   const [wordWindow, setWordWindow] = useState(false);
@@ -63,6 +65,15 @@ const GameArea = ({ roomId }) => {
     window.addEventListener("keypress", handleKeyPress);
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
+    //checking for socket connection established or not
+    if (socket.connected === false) {
+      socket.disconnect();
+      socket.removeAllListeners();
+      //sending user to home page
+      router.push("/");
+    }
+
     socket.on("setPresenter", ({ presenter }) => {
       setPresenter(presenter);
       if (presenter === false) setChatBlock(false);

@@ -1,5 +1,5 @@
 import { lobby } from "../global/GlobalVariables.js";
-import { io } from "../websocket.js";
+import { io } from "../server.js";
 
 export const resettingScoreService = (roomId) => {
   const lobbyData = lobby.get(roomId);

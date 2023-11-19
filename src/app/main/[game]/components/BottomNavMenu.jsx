@@ -6,8 +6,6 @@ import globalStateContext from "@/app/States/GlobalStateManager";
 import { AiFillBulb } from "react-icons/ai";
 
 const BottomNavMenu = ({ roomId }) => {
-  const [round, setRound] = useState("");
-
   const {
     setGameStarted,
     isAdmin,
@@ -17,7 +15,7 @@ const BottomNavMenu = ({ roomId }) => {
     displayHint,
     setDisplayHint,
     remainingHints,
-    setRemainingHints,
+    round,
   } = useContext(globalStateContext);
 
   const router = useRouter();
@@ -26,13 +24,6 @@ const BottomNavMenu = ({ roomId }) => {
     socket.on("StartGame", (gameLink) => {
       setGameStarted(true);
       router.push(gameLink);
-    });
-    socket.on("remainingHints", (data) => {
-      console.log(data);
-      setRemainingHints(data);
-    });
-    socket.on("roundNo", (data) => {
-      setRound(data);
     });
   }, []);
 

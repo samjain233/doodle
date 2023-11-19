@@ -13,7 +13,9 @@ export const GlobalStateProvider = ({ children }) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [guessWord, setGuessWord] = useState("");
   const [remainingHints, setRemainingHints] = useState("");
-  const [displayHint , setDisplayHint] = useState(false);
+  const [displayHint, setDisplayHint] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [round, setRound] = useState("");
 
   return (
     <globalStateContext.Provider
@@ -39,7 +41,11 @@ export const GlobalStateProvider = ({ children }) => {
         displayHint,
         setDisplayHint,
         remainingHints,
-        setRemainingHints
+        setRemainingHints,
+        userName,
+        setUserName,
+        round,
+        setRound
       }}
     >
       {children}
