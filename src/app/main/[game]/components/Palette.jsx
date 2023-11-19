@@ -38,10 +38,6 @@ const Palette = () => {
 
   const handleClear = () => {
     setElements([]);
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.fillRect = "white";
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   };
 
   const handleUndoClick = () => {
@@ -51,7 +47,6 @@ const Palette = () => {
       elements[elements.length - 1],
     ]);
 
-    if (elements.length === 1) handleClear();
     setElements((prevElements) =>
       prevElements.slice(0, prevElements.length - 1)
     );

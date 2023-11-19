@@ -10,14 +10,14 @@ const NavLobby = (props) => {
   const { lobby, setLobby, presenterDetails, isAdmin } =
     useContext(globalStateContext);
 
-  const handleRemoveUser = (removedUserId)=>{
+  const handleRemoveUser = (removedUserId) => {
     if (isAdmin === false) return;
     const removeUserData = {
       roomId: props.roomId,
       removedUserSocketId: removedUserId,
     };
     socket.emit("removeUser", removeUserData);
-  }
+  };
 
   useEffect(() => {
     socket.on("lobby", (lobbyUsers) => {
@@ -32,7 +32,7 @@ const NavLobby = (props) => {
         {lobby.map((user) => {
           return (
             <div
-              className={`shadow-sm my-2 rounded bg-gray-200 ${
+              className={`shadow-sm my-2 rounded ${
                 user.thisRoundScore !== undefined &&
                 user.thisRoundScore !== null &&
                 user.thisRoundScore > 0 &&

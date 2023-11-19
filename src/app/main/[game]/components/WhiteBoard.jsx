@@ -33,12 +33,12 @@ const WhiteBoard = ({ isShiftPressed, roomId }) => {
     setHistory,
     fill,
   } = useContext(StateContext);
-  const {presenter} = useContext(globalStateContext);
+  const { presenter } = useContext(globalStateContext);
   const [hold, setHold] = useState(false);
   const divRef = useRef(null);
 
   const handleMouseDown = (e) => {
-    if(presenter === false ) return ;
+    if (presenter === false) return;
     const { offsetX, offsetY } = e.nativeEvent;
     setHold(true);
 
@@ -126,7 +126,7 @@ const WhiteBoard = ({ isShiftPressed, roomId }) => {
   };
 
   const handleMouseMove = (e) => {
-    if(presenter === false ) return ;
+    if (presenter === false) return;
     const { offsetX, offsetY } = e.nativeEvent;
     if (hold) {
       setHistory([]);
@@ -220,7 +220,7 @@ const WhiteBoard = ({ isShiftPressed, roomId }) => {
   };
 
   const handleMouseUp = (e) => {
-    if(presenter === false ) return ;
+    if (presenter === false) return;
     setHold(false);
   };
 
@@ -234,6 +234,15 @@ const WhiteBoard = ({ isShiftPressed, roomId }) => {
       if (presenter === false) setElements(data);
     });
   }, [presenter]);
+
+  useEffect(() => {
+    if (elements.length === 0) {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      ctx.fillRect = "white";
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    }
+  }, [elements]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

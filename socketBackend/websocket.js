@@ -35,7 +35,12 @@ import {
 } from "./services/resettingScoreService.js";
 import { checkLastRoundService } from "./services/checkLastRoundService.js";
 import { removeUserService } from "./services/removeUserService.js";
-import { hintService } from "./services/hintService.js";
+import {
+  displayHintsToAllLobby,
+  displayRemainingHintServie,
+  hintService,
+} from "./services/hintService.js";
+import { cleaningBoardService } from "./services/cleaningBoardService.js";
 
 const httpServer = createServer();
 
@@ -64,6 +69,7 @@ io.on("connection", (socket) => {
         userName: "Bekarraja",
         isAdmin: false,
         score: 0,
+        hintsUsed: 0,
       });
       lobby.set(roomId, { ...tLobbyData, users });
     } else {
@@ -106,6 +112,7 @@ io.on("connection", (socket) => {
     const lobbyData = lobby.get(roomId);
     userLobbies.set(socket.id, roomId);
     io.to(roomId).emit("lobby", lobbyData.users);
+    displayRemainingHintServie(roomId, socket.id);
     // io.to(roomId).emit("lobbySettings", lobbyData.settings);
   });
 
@@ -122,6 +129,7 @@ io.on("connection", (socket) => {
     ) {
       lobbyData.settings = gameSettings;
       socket.to(roomId).emit("lobbySettings", lobbyData.settings);
+      displayHintsToAllLobby(roomId);
     }
   });
 
@@ -130,6 +138,7 @@ io.on("connection", (socket) => {
     const lobbyData = lobby.get(roomId);
     //checking of admin socketId
     if (socket.id === lobbyData.admin.socketId) {
+      displayHintsToAllLobby(roomId);
       setNextTimeService(roomId, 0);
       const nextPageUrl = "/main/" + roomId;
       io.to(roomId).emit("StartGame", nextPageUrl);
@@ -290,6 +299,7 @@ const getCurrentTime = () => {
               resettingScoreService(roomId);
               resetGuessWordDisplayService(roomId);
               hideScoreService(roomId);
+              cleaningBoardService(roomId);
               const isLastRound = checkLastRoundService(roomId);
               if (!isLastRound) setNextTimeService(roomId, 4);
               break;

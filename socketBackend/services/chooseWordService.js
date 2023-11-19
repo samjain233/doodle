@@ -34,6 +34,10 @@ export const chooseWordService = (roomId, token) => {
   const time = 20;
   io.to(roomId).emit("setTime", time);
 
+  //sending roundNo.
+  const roundNo = lobbyData.roundDetails.round;
+  io.to(roomId).emit("roundNo", roundNo);
+
   //sending message of presenter by admin pc
   const socketId = "Moderator";
   const chatMsg = `${presenterSocketId} is choosing a word`;
