@@ -3,6 +3,7 @@ import globalStateContext from "../States/GlobalStateManager";
 import randomstring from "randomstring";
 import { socket } from "../test/socketConn";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const UserDetail = () => {
   const router = useRouter();
@@ -13,6 +14,8 @@ const UserDetail = () => {
     setLobby,
     setRemainingHints,
     setRound,
+    setLoading,
+    loading,
   } = useContext(globalStateContext);
 
   const userNameBoxRef = useRef(null);
@@ -20,6 +23,7 @@ const UserDetail = () => {
   const handlePlayClick = async () => {
     if (userName === "") {
       userNameBoxRef.current.focus();
+      toast.error("Please Enter username first");
       return;
     }
     //checking for available rooms
@@ -27,35 +31,37 @@ const UserDetail = () => {
     const findGameApiUrl = process.env.NEXT_PUBLIC_SERVER + "/api/findgame";
     const response = await fetch(findGameApiUrl);
     const { room, msg } = await response.json();
-    console.log(room);
-    console.log(msg);
     if (room !== null) {
       socket.emit("socketConn", { roomId: room, userName: userName });
+      toast.success("Room find Successful : " + room);
+    } else {
+      toast.error(msg);
     }
   };
 
   const handleCreateRoom = async () => {
     if (userName === "") {
       userNameBoxRef.current.focus();
+      toast.error("Please Enter username first");
       return;
     }
     //creating new room
     const randomRoomId = randomstring.generate(7);
-    console.log(randomRoomId);
     socket.emit("socketConn", { roomId: randomRoomId, userName: userName });
+    toast.success("Successfull Created Room : " + randomRoomId);
   };
 
   useEffect(() => {
     socket.on("statusSocketConn", (data) => {
-      console.log(data);
       const { success, roomId, username } = data;
       if (success) {
-        const data = {
+        const senddata = {
           roomId: roomId,
           userName: username,
         };
-        console.log(data);
-        socket.emit("joinLobby", data);
+        socket.emit("joinLobby", senddata);
+        toast.loading("Joining lobby ....");
+        setLoading(true);
         router.push("/lobby/" + roomId);
       }
     });
@@ -80,16 +86,23 @@ const UserDetail = () => {
     socket.on("disconnect", () => {
       console.log(socket.connected);
     });
+
     return () => {
       socket.removeAllListeners("statusSocketConn");
     };
   }, []);
+
+  useEffect(() => {
+    console.log(loading);
+    if (loading === false) toast.dismiss();
+  }, [loading]);
 
   return (
     <>
       <div>
         <input
           type="text"
+          placeholder="username"
           className="text-black h-full w-full text-2xl py-2 px-8 rounded-2xl border border-black text-center"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}

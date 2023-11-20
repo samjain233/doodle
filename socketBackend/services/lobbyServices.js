@@ -13,3 +13,7 @@ export const setStartTimeService = (roomId) => {
   lobbyData.roundDetails.startTime = currTime;
   lobby.set(roomId, lobbyData);
 };
+
+export const sendRoundNoService = (roomId)=>{
+
+}

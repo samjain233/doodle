@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import { lobby, lobbyTime, userLobbies } from "./global/GlobalVariables.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -12,6 +13,9 @@ import api from "./routes/api.js";
 app.use("/", api);
 
 app.get("/", (req, res) => {
+  console.log(lobby);
+  console.log(lobbyTime);
+  console.log(userLobbies);
   const object = {
     title: "camelCase mars doodle game app",
     server: "on",

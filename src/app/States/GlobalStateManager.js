@@ -10,12 +10,14 @@ export const GlobalStateProvider = ({ children }) => {
   const [chatBlock, setChatBlock] = useState(false);
   const [lobby, setLobby] = useState([]);
   const [presenterDetails, setPresenterDetails] = useState(null);
+  const [presenterName, setPresenterName] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
   const [guessWord, setGuessWord] = useState("");
   const [remainingHints, setRemainingHints] = useState("");
   const [displayHint, setDisplayHint] = useState(false);
   const [userName, setUserName] = useState("");
   const [round, setRound] = useState("");
+  const [loading, setLoading] = useState(false);
 
   return (
     <globalStateContext.Provider
@@ -45,7 +47,11 @@ export const GlobalStateProvider = ({ children }) => {
         userName,
         setUserName,
         round,
-        setRound
+        setRound,
+        presenterName,
+        setPresenterName,
+        loading,
+        setLoading,
       }}
     >
       {children}

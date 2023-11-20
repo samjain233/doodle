@@ -4,15 +4,14 @@ import { avataaars } from "@dicebear/collection";
 
 const NavLobbyAvatar = ({ userName }) => {
   const [dataUri, setDataUri] = useState("");
-    useEffect(()=>{
-        const avatar = createAvatar(avataaars, {
-            seed: userName,
-          });
-          avatar.toDataUri().then((data) => {
-            setDataUri(data);
-          });
-    },[])
-  
+  useEffect(() => {
+    const avatar = createAvatar(avataaars, {
+      seed: userName,
+    });
+    avatar.toDataUri().then((data) => {
+      setDataUri(data);
+    });
+  }, []);
 
   return (
     <>

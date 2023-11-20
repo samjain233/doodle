@@ -15,10 +15,15 @@ export const setPresenterService = (roomId) => {
   const time = lobbyData.settings.duration;
   io.to(roomId).emit("setTime", time);
 
+  //getting name of the presenter
+  const users = lobbyData.users;
+  const index = users.findIndex((user) => user.socketId === presenterSocketId);
+  const presenterName = users[index].userName;
+
   //sending message of presenter by admin pc
-  const socketId = "Moderator";
-  const chatMsg = `${presenterSocketId} is the presenter`;
-  io.to(roomId).emit("recievedChatData", { socketId, chatMsg });
+  const modName = "Moderator";
+  const chatMsg = `${presenterName} is the presenter`;
+  io.to(roomId).emit("recievedChatData", { userName: modName, chatMsg });
 };
 
 export const removePresenterService = (roomId) => {

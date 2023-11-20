@@ -6,15 +6,14 @@ import { avataaars } from "@dicebear/collection";
 const Profile = (props) => {
   const socketId = socket.id;
   const [dataUri, setDataUri] = useState("");
-  useEffect(()=>{
+  useEffect(() => {
     const avatar = createAvatar(avataaars, {
       seed: props.userName,
     });
     avatar.toDataUri().then((data) => {
       setDataUri(data);
     });
-  },[])
-  
+  }, []);
 
   return (
     <>

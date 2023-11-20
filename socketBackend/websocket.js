@@ -168,8 +168,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", (data) => {
-    const { roomId, chatMsg } = data;
-    handleInputMessageService(roomId, chatMsg, socket);
+    console.log(data);
+    const { roomId, userName, chatMsg } = data;
+    handleInputMessageService(roomId, chatMsg, userName, socket);
   });
 
   socket.on("wordChoosed", (data) => {

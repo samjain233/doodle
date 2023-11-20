@@ -19,8 +19,14 @@ export const chooseWordService = (roomId, token) => {
   lobby.set(roomId, lobbyData);
   io.to(presenterSocketId).emit("chooseWord", { chooseWordWindow: true });
 
+  //userName;
+  const userName = presenterDetails.userName;
+
   //send presenter details in the lobby
-  io.to(roomId).emit("presenterDetails", { presenterSocketId });
+  io.to(roomId).emit("presenterDetails", {
+    presenterSocketId,
+    presenterName: userName,
+  });
 
   //showing waiting screen to the rest lobby
   io.to(roomId)
@@ -39,9 +45,9 @@ export const chooseWordService = (roomId, token) => {
   io.to(roomId).emit("roundNo", roundNo);
 
   //sending message of presenter by admin pc
-  const socketId = "Moderator";
-  const chatMsg = `${presenterSocketId} is choosing a word`;
-  io.to(roomId).emit("recievedChatData", { socketId, chatMsg });
+  const modName = "Moderator";
+  const chatMsg = `${userName} is choosing a word`;
+  io.to(roomId).emit("recievedChatData", { userName: modName, chatMsg });
 };
 
 export const endWordService = (roomId) => {

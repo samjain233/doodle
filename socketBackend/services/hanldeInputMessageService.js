@@ -8,7 +8,12 @@ import { removePresenterService } from "./setPresenterService.js";
 
 const MaxScore = 400;
 
-export const handleInputMessageService = (roomId, chatMsg, socket) => {
+export const handleInputMessageService = (
+  roomId,
+  chatMsg,
+  userName,
+  socket
+) => {
   const lobbyData = lobby.get(roomId);
   const word = lobbyData.roundDetails.word;
   const presenterSocketId = lobbyData.presenter.socketId;
@@ -21,12 +26,19 @@ export const handleInputMessageService = (roomId, chatMsg, socket) => {
     typeof word === "string" &&
     chatMsg.toLowerCase() === word.toLowerCase()
   ) {
+    let users = lobbyData.users;
+    const presenterSocketId = lobbyData.presenter.socketId;
+    const index = users.findIndex((user) => user.socketId === socketId);
+
+    //sending message in the lobby
     const moderator = "moderator";
-    const msg = `${socketId} Guessed the Word`;
+    const msg = `${users[index].userName} Guessed the Word`;
     io.to(roomId).emit("recievedChatData", {
-      socketId: moderator,
+      userName: moderator,
       chatMsg: msg,
     });
+
+    //calculting score
     const currDate = new Date();
     const currTime = currDate.getTime();
     const startTime = lobbyData.roundDetails.startTime;
@@ -39,9 +51,6 @@ export const handleInputMessageService = (roomId, chatMsg, socket) => {
     io.to(socketId).emit("chatBlock", { chatBlock: true });
 
     //setting score value in the lobbyData
-    let users = lobbyData.users;
-    const presenterSocketId = lobbyData.presenter.socketId;
-    const index = users.findIndex((user) => user.socketId === socketId);
     const pIndex = users.findIndex(
       (user) => user.socketId === presenterSocketId
     );
@@ -89,5 +98,5 @@ export const handleInputMessageService = (roomId, chatMsg, socket) => {
     return;
   }
 
-  io.to(roomId).emit("recievedChatData", { socketId, chatMsg });
+  io.to(roomId).emit("recievedChatData", { userName, chatMsg });
 };

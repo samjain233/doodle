@@ -10,6 +10,7 @@ import ChooseWord from "./ChooseWord";
 import Score from "./Score";
 import globalStateContext from "@/app/States/GlobalStateManager";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const GameArea = ({ roomId }) => {
   const router = useRouter();
@@ -23,9 +24,11 @@ const GameArea = ({ roomId }) => {
     presenter,
     setChatBlock,
     setPresenterDetails,
+    setPresenterName,
     presenterDetails,
     setGameStarted,
     gameStarted,
+    setLoading,
   } = useContext(globalStateContext);
 
   const handleKeyPress = (e) => {
@@ -62,12 +65,13 @@ const GameArea = ({ roomId }) => {
   }, [gameStarted]);
 
   useEffect(() => {
+    //windows event listeners
     window.addEventListener("keypress", handleKeyPress);
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
     //checking for socket connection established or not
-    console.log(socket.connected)
+    console.log(socket.connected);
     if (socket.connected === false) {
       console.log("runs");
       socket.disconnect();
@@ -90,9 +94,9 @@ const GameArea = ({ roomId }) => {
     socket.on("showScore", ({ showScoreWindow }) => {
       setScoreWindow(showScoreWindow);
     });
-    socket.on("presenterDetails", ({ presenterSocketId }) => {
-      console.log(presenterSocketId);
+    socket.on("presenterDetails", ({ presenterSocketId, presenterName }) => {
       setPresenterDetails(presenterSocketId);
+      setPresenterName(presenterName);
     });
     socket.on("chatBlock", ({ chatBlock }) => {
       setChatBlock(chatBlock);

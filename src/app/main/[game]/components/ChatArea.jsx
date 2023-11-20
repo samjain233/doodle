@@ -5,7 +5,7 @@ import { socket } from "@/app/test/socketConn";
 import globalStateContext from "@/app/States/GlobalStateManager";
 
 const ChatArea = ({ roomId }) => {
-  const { chat, setChat, chatBlock } = useContext(globalStateContext);
+  const { chat, setChat, chatBlock , userName } = useContext(globalStateContext);
   const [inputChat, setInputChat] = useState("");
   const endMessageRef = useRef(null);
 
@@ -17,6 +17,7 @@ const ChatArea = ({ roomId }) => {
     if (inputChat === "" || chatBlock === true) return;
     const data = {
       roomId: roomId,
+      userName : userName,
       chatMsg: inputChat,
     };
     socket.emit("sendMessage", data);
@@ -26,9 +27,9 @@ const ChatArea = ({ roomId }) => {
   useEffect(() => {
     socket.on("recievedChatData", (data) => {
       console.log(data);
-      const { socketId, chatMsg } = data;
+      const { userName, chatMsg } = data;
       setChat((prevChat) => {
-        return [...prevChat, { socketId, chatMsg }];
+        return [...prevChat, { userName, chatMsg }];
       });
     });
     return () => {
@@ -55,7 +56,7 @@ const ChatArea = ({ roomId }) => {
                 key={index}
                 className="text-xs text-black px-1 py-1 rounded-xs"
               >
-                <span className="font-semibold text-xs">{c.socketId}:</span>{" "}
+                <span className="font-semibold text-xs">{c.userName}:</span>{" "}
                 {c.chatMsg}
               </div>
             );
