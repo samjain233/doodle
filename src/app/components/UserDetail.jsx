@@ -3,6 +3,7 @@ import globalStateContext from "../States/GlobalStateManager";
 import randomstring from "randomstring";
 import { socket } from "../test/socketConn";
 import { useRouter } from "next/navigation";
+import { joinLobbyAudio } from "../audioController";
 
 const UserDetail = () => {
   const router = useRouter();
@@ -66,6 +67,7 @@ const UserDetail = () => {
 
     socket.on("lobby", (lobbyUsers) => {
       setLobby(lobbyUsers);
+      joinLobbyAudio();
     });
 
     socket.on("remainingHints", (data) => {
