@@ -63,9 +63,9 @@ const BottomNavMenu = ({ roomId }) => {
   };
 
   const handleCopyRoomIdClick = () => {
-    const link = "http://localhost:3000?room=" + roomId;
+    const link = process.env.NEXT_PUBLIC_CLIENT + "?room=" + roomId;
     navigator.clipboard.writeText(link);
-    toast.success("Copied to ClipBoard")
+    toast.success("Copied to ClipBoard");
   };
 
   useEffect(() => {
@@ -87,7 +87,7 @@ const BottomNavMenu = ({ roomId }) => {
         </div>
         <div className="h-[80%] border-r border-white border-solid"></div>
         <div
-          className={`cursor-pointer px-1 mx-1  transition-all ${
+          className={`cursor-pointer px-1 mx-1 xl:mx-2 transition-all ${
             gameStarted &&
             !presenter &&
             displayHint &&
@@ -100,15 +100,15 @@ const BottomNavMenu = ({ roomId }) => {
         >
           <AiFillBulb />
         </div>
-        <div className="p-1 mr-2 text-sm bg-gray-500 text-white rounded-full">
+        <div className="p-1 mr-1 text-sm bg-gray-500 text-white rounded-full">
           {remainingHints}
         </div>
         <div className="h-[80%] border-r border-white border-solid"></div>
-        <div className="text-xs mx-2 bg-gray-500 p-1 px-2 rounded">
+        <div className="text-xs mx-1 xl:mx-2 bg-gray-500 p-1 px-2 rounded">
           Round : {round}
         </div>
         <div className="h-[80%] border-r border-white border-solid"></div>
-        <div className="text-xs mx-2 bg-gray-500 p-1 px-2 rounded flex justify-center items-center">
+        <div className="text-xs mx-1 xl:mx-2 bg-gray-500 p-1 px-2 rounded flex justify-center items-center">
           Lobby : {roomId}
           <div className="ml-2 cursor-pointer" onClick={handleCopyRoomIdClick}>
             <IoCopy />

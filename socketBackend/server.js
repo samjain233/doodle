@@ -31,7 +31,7 @@ export const io = new Server(server, {
   },
 });
 
-const port = 5000;
+const port = 3000;
 server.listen(port, function () {
   console.log("app listening on port : " + port);
 });

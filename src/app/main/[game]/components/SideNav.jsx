@@ -19,7 +19,7 @@ const SideNav = ({ roomId }) => {
           <div className="w-full h-full row-span-2 border-b border-white border-solid">
             <GuessWord />
           </div>
-          <div className="w-full h-full border-b border-white border-solid">
+          <div className="w-full h-full row-span-1 border-b border-white border-solid overflow-x-auto">
             <SideNavNavigation
               selectedSideNav={selectedSideNav}
               setSelectedSideNav={setSelectedSideNav}
@@ -30,7 +30,7 @@ const SideNav = ({ roomId }) => {
             {selectedSideNav === "lobby" && <NavLobby roomId={roomId} />}
             {selectedSideNav === "settings" && <Settings roomId={roomId} />}
           </div>
-          <div className="w-full h-full ">
+          <div className="w-full h-full mt-1 overflow-x-auto">
             <BottomNavMenu roomId={roomId} />
           </div>
         </div>

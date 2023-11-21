@@ -15,7 +15,7 @@ const SideNavNavigation = ({ selectedSideNav , setSelectedSideNav}) => {
             <div
               key={navItem}
               onClick={() => handleNavigationClick(navItem)}
-              className={`text-lg px-4 py-1 bg-gray-400 rounded-full mx-4 hover:bg-gray-500 cursor-pointer ${
+              className={`text-sm px-2 xl:px-4 py-1 bg-gray-400 rounded-full mx-1 lg:mx-2 xl:mx-4 hover:bg-gray-500 cursor-pointer ${
                 selectedSideNav === navItem ? "bg-gray-500" : ""
               }`}
             >

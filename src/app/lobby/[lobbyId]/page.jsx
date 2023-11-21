@@ -15,7 +15,7 @@ const Lobby = ({ params }) => {
       <LobbyStateProvider>
         <div className="h-screen w-screen">
           <div className="w-full h-full grid grid-cols-12">
-            <div className="col-span-9 bg-white overflow-x-auto">
+            <div className="col-span-9 bg-white overflow-y-auto">
               <UsersInLobby roomId={params.lobbyId} />
             </div>
             <div className="col-span-3">
