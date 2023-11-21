@@ -5,7 +5,7 @@ import { LobbyStateProvider } from "./States/lobbyStateManager";
 import SideNav from "@/app/main/[game]/components/SideNav";
 import toast from "react-hot-toast";
 
-const page = ({ params }) => {
+const Lobby = ({ params }) => {
   useEffect(() => {
     toast.dismiss();
   }, []);
@@ -29,4 +29,4 @@ const page = ({ params }) => {
   );
 };
 
-export default page;
+export default Lobby;

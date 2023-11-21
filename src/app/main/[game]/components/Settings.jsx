@@ -7,7 +7,7 @@ import { AiOutlineLeftCircle } from "react-icons/ai";
 import { AiOutlineRightCircle } from "react-icons/ai";
 
 const Settings = ({ roomId }) => {
-  const { gameSettings, setGameSettings, isAdmin , gameStarted } =
+  const { gameSettings, setGameSettings, isAdmin, gameStarted } =
     useContext(globalStateContext);
   useEffect(() => {
     console.log(roomId);
@@ -36,16 +36,19 @@ const Settings = ({ roomId }) => {
           <div>Players</div>
           <div className="h-full flex flex-row justify-center items-center">
             <div className="mx-4">{gameSettings.players}</div>
-            {isAdmin && !gameStarted &&  (
+            {isAdmin && !gameStarted && (
               <div>
                 <div
                   className="mr-1 text-xl cursor-pointer"
                   onClick={() => {
                     setGameSettings((prevSettings) => {
-                      return {
-                        ...prevSettings,
-                        players: prevSettings.players + 1,
-                      };
+                      if (prevSettings.players === 12) return prevSettings;
+                      else {
+                        return {
+                          ...prevSettings,
+                          players: prevSettings.players + 1,
+                        };
+                      }
                     });
                   }}
                 >
@@ -55,10 +58,13 @@ const Settings = ({ roomId }) => {
                   className="mr-1 text-xl cursor-pointer"
                   onClick={() => {
                     setGameSettings((prevSettings) => {
-                      return {
-                        ...prevSettings,
-                        players: prevSettings.players - 1,
-                      };
+                      if (prevSettings.players === 2) return prevSettings;
+                      else {
+                        return {
+                          ...prevSettings,
+                          players: prevSettings.players - 1,
+                        };
+                      }
                     });
                   }}
                 >
@@ -78,10 +84,13 @@ const Settings = ({ roomId }) => {
                   className="mr-1 text-xl cursor-pointer"
                   onClick={() => {
                     setGameSettings((prevSettings) => {
-                      return {
-                        ...prevSettings,
-                        rounds: prevSettings.rounds + 1,
-                      };
+                      if (prevSettings.rounds === 7) return prevSettings;
+                      else {
+                        return {
+                          ...prevSettings,
+                          rounds: prevSettings.rounds + 1,
+                        };
+                      }
                     });
                   }}
                 >
@@ -91,10 +100,13 @@ const Settings = ({ roomId }) => {
                   className="mr-1 text-xl cursor-pointer"
                   onClick={() => {
                     setGameSettings((prevSettings) => {
-                      return {
-                        ...prevSettings,
-                        rounds: prevSettings.rounds - 1,
-                      };
+                      if (prevSettings.rounds === 1) return prevSettings;
+                      else {
+                        return {
+                          ...prevSettings,
+                          rounds: prevSettings.rounds - 1,
+                        };
+                      }
                     });
                   }}
                 >
@@ -114,10 +126,13 @@ const Settings = ({ roomId }) => {
                   className="mr-1 text-xl cursor-pointer"
                   onClick={() => {
                     setGameSettings((prevSettings) => {
-                      return {
-                        ...prevSettings,
-                        duration: prevSettings.duration + 5,
-                      };
+                      if (prevSettings.duration === 180) return prevSettings;
+                      else {
+                        return {
+                          ...prevSettings,
+                          duration: prevSettings.duration + 5,
+                        };
+                      }
                     });
                   }}
                 >
@@ -127,10 +142,13 @@ const Settings = ({ roomId }) => {
                   className="mr-1 text-xl cursor-pointer"
                   onClick={() => {
                     setGameSettings((prevSettings) => {
-                      return {
-                        ...prevSettings,
-                        duration: prevSettings.duration - 5,
-                      };
+                      if (prevSettings.duration === 30) return prevSettings;
+                      else {
+                        return {
+                          ...prevSettings,
+                          duration: prevSettings.duration - 5,
+                        };
+                      }
                     });
                   }}
                 >
@@ -150,10 +168,13 @@ const Settings = ({ roomId }) => {
                   className="mr-1 text-xl cursor-pointer"
                   onClick={() => {
                     setGameSettings((prevSettings) => {
-                      return {
-                        ...prevSettings,
-                        hints: prevSettings.hints + 1,
-                      };
+                      if (prevSettings.hints === 50) return prevSettings;
+                      else {
+                        return {
+                          ...prevSettings,
+                          hints: prevSettings.hints + 1,
+                        };
+                      }
                     });
                   }}
                 >
@@ -163,10 +184,13 @@ const Settings = ({ roomId }) => {
                   className="mr-1 text-xl cursor-pointer"
                   onClick={() => {
                     setGameSettings((prevSettings) => {
-                      return {
-                        ...prevSettings,
-                        hints: prevSettings.hints - 1,
-                      };
+                      if (prevSettings.hints === 0) return prevSettings;
+                      else {
+                        return {
+                          ...prevSettings,
+                          hints: prevSettings.hints - 1,
+                        };
+                      }
                     });
                   }}
                 >

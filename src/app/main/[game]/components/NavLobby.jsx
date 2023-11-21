@@ -18,11 +18,11 @@ const NavLobby = (props) => {
     socket.emit("removeUser", removeUserData);
   };
 
-  useEffect(() => {
-    socket.on("lobby", (lobbyUsers) => {
-      setLobby(lobbyUsers);
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on("lobby", (lobbyUsers) => {
+  //     setLobby(lobbyUsers);
+  //   });
+  // }, []);
 
   const socketId = socket.id;
   return (

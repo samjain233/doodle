@@ -11,6 +11,7 @@ import Score from "./Score";
 import globalStateContext from "@/app/States/GlobalStateManager";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Result from "./Result";
 
 const GameArea = ({ roomId }) => {
   const router = useRouter();
@@ -29,6 +30,8 @@ const GameArea = ({ roomId }) => {
     setGameStarted,
     gameStarted,
     setLoading,
+    showResult,
+    setShowResult,
   } = useContext(globalStateContext);
 
   const handleKeyPress = (e) => {
@@ -101,6 +104,9 @@ const GameArea = ({ roomId }) => {
     socket.on("chatBlock", ({ chatBlock }) => {
       setChatBlock(chatBlock);
     });
+    socket.on("showResult", ({ result }) => {
+      setShowResult(result);
+    });
     // socket.on("StartGame", (gameLink) => {
     //   console.log("runs");
     //   setGameStarted(true);
@@ -153,6 +159,13 @@ const GameArea = ({ roomId }) => {
           >
             <Palette />
           </div>
+        </div>
+        <div
+          className={`z-[150] h-full w-full absolute ${
+            showResult ? "top-0" : "top-[-1200px]"
+          } left-0 transition-all duration-500`}
+        >
+          <Result roomId={roomId} />
         </div>
       </div>
     </>

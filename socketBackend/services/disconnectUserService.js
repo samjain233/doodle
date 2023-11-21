@@ -1,8 +1,7 @@
 import { lobby, userLobbies } from "../global/GlobalVariables.js";
 import { io } from "../server.js";
-import { endWordService } from "./chooseWordService.js";
 import { displayCorrectWord } from "./displayGuessWord.js";
-import { adminRemovedMemberMessageService } from "./messageService.js";
+import { leaveTheLobbyMessageService } from "./messageService.js";
 import {
   removeChatBlockService,
   removeWaitingScreenService,
@@ -13,30 +12,34 @@ import {
   removePresenterService,
 } from "./setPresenterService.js";
 
-export const removeUserService = async (roomId, removedUserSocketId) => {
+export const disconnectUserService = async (roomId, socketId, socket) => {
   const lobbyData = lobby.get(roomId);
-  console.log(lobbyData);
   const users = lobbyData.users;
-  const index = users.findIndex(
-    (user) => user.socketId === removedUserSocketId
-  );
+  const index = users.findIndex((user) => user.socketId === socketId);
   if (index !== -1) {
     const userName = users[index].userName;
-
-    //sending message in the lobby
-    adminRemovedMemberMessageService(roomId, userName);
-
     users.splice(index, 1);
-    lobby.set(roomId, { ...lobbyData, users });
 
-    //deleting user from userLobbies map
-    userLobbies.delete(removedUserSocketId);
+    //if he is the last user to leaving the room then deleting the room
+    if (users.length === 0) {
+      socket.leave(roomId);
+      lobby.delete(roomId);
+      userLobbies.delete(socketId);
+      return;
+    }
 
-    //resetting the lobby
-    io.to(roomId).emit("lobby", users);
+    leaveTheLobbyMessageService(roomId, userName);
 
-    //checking if the removedUser is the presenter or not
-    if (lobbyData.presenter.socketId === removedUserSocketId) {
+    //if the user is admin the change the admin
+    if (socketId === lobbyData.admin.socketId && users.length > 0) {
+      users[0].isAdmin = true;
+      const newAdminSocketId = users[0].socketId;
+      io.to(newAdminSocketId).emit("setAdmin", { setAdmin: true });
+      lobbyData.admin.socketId = newAdminSocketId;
+    }
+
+    // if the user is the current presenter
+    if (lobbyData.presenter.socketId === socketId) {
       //then i need some additional steps to perform
       //showing score card in the lobby
       io.to(roomId).emit("showScore", { showScoreWindow: true });
@@ -54,12 +57,9 @@ export const removeUserService = async (roomId, removedUserSocketId) => {
       setNextTimeService(roomId, 3);
     }
 
-    //disconnection from socket
-    const sockets = await io.in(roomId).fetchSockets();
-    sockets.forEach((s) => {
-      if (s.id === removedUserSocketId) {
-        s.disconnect(true);
-      }
-    });
+    socket.leave(roomId);
+    lobby.set(roomId, { ...lobbyData, users });
+    userLobbies.delete(socketId);
+    io.to(roomId).emit("lobby", users);
   }
 };

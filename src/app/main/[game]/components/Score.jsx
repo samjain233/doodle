@@ -5,11 +5,11 @@ import globalStateContext from "@/app/States/GlobalStateManager";
 
 const Score = ({ roomId }) => {
   const { lobby, setLobby } = useContext(globalStateContext);
-  useEffect(() => {
-    socket.on("lobby", (lobbyUsers) => {
-      setLobby(lobbyUsers);
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on("lobby", (lobbyUsers) => {
+  //     setLobby(lobbyUsers);
+  //   });
+  // }, []);
   return (
     <>
       <div className="w-full h-full bg-gray-200/20 backdrop-blur-md">

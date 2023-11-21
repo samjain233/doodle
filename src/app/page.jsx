@@ -71,7 +71,7 @@ const HomePage = () => {
       } before:transition-all before:duration-500`}
     >
       <div className="h-full w-full flex justify-center items-center">
-        <div className="bg-white/30 backdrop-blur-sm h-[60%] w-[50%] rounded-2xl relative shadow-2xl">
+        <div className="bg-white/30 backdrop-blur-sm w-[50%] rounded-2xl relative shadow-2xl">
           <div className="absolute top-[-10%] right-[-10%]">
             <Image src={BrushImage} height={100} width={200} alt="brushImage" />
           </div>
