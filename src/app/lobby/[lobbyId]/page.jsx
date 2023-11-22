@@ -5,7 +5,7 @@ import { LobbyStateProvider } from "./States/lobbyStateManager";
 import SideNav from "@/app/main/[game]/components/SideNav";
 import toast from "react-hot-toast";
 
-const page = ({ params }) => {
+const Lobby = ({ params }) => {
   useEffect(() => {
     toast.dismiss();
   }, []);
@@ -15,7 +15,7 @@ const page = ({ params }) => {
       <LobbyStateProvider>
         <div className="h-screen w-screen">
           <div className="w-full h-full grid grid-cols-12">
-            <div className="col-span-9 bg-white overflow-x-auto">
+            <div className="col-span-9 bg-white overflow-y-auto">
               <UsersInLobby roomId={params.lobbyId} />
             </div>
             <div className="col-span-3">
@@ -29,4 +29,4 @@ const page = ({ params }) => {
   );
 };
 
-export default page;
+export default Lobby;

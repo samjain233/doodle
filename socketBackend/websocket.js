@@ -18,7 +18,11 @@ import {
   hideScoreService,
 } from "./services/displayScoreService.js";
 import { drawToken } from "./utils/drawToken.js";
-import { failToSelectWord } from "./services/messageService.js";
+import {
+  adminChangeMessageService,
+  failToSelectWord,
+  userJoinedTheRoomService,
+} from "./services/messageService.js";
 import {
   displayCorrectWord,
   displayGuessWord,
@@ -40,6 +44,8 @@ import {
 } from "./services/hintService.js";
 import { cleaningBoardService } from "./services/cleaningBoardService.js";
 import { io } from "./server.js";
+import { disconnectUserService } from "./services/disconnectUserService.js";
+import { endGameService } from "./services/endGameService.js";
 
 io.on("connection", (socket) => {
   socket.on("socketConn", (data) => {
@@ -123,6 +129,7 @@ io.on("connection", (socket) => {
     userLobbies.set(socket.id, roomId);
     io.to(roomId).emit("lobby", lobbyData.users);
     displayRemainingHintServie(roomId, socket.id);
+    userJoinedTheRoomService(roomId, userName);
     // io.to(roomId).emit("lobbySettings", lobbyData.settings);
   });
 
@@ -220,6 +227,9 @@ io.on("connection", (socket) => {
           tlobbyData.admin.socketId = data.newAdminSocketId;
           lobby.set(roomId, { ...tlobbyData, users });
           io.to(roomId).emit("lobby", users);
+
+          //sending message in the lobby
+          adminChangeMessageService(roomId, users[index].userName);
         }
       }
     }
@@ -239,25 +249,8 @@ io.on("connection", (socket) => {
   socket.on("disconnect", async () => {
     const roomId = userLobbies.get(socket.id);
     if (roomId !== undefined && roomId !== null) {
-      const tlobbyData = lobby.get(roomId);
-      const users = tlobbyData.users;
-      const index = users.findIndex((user) => user.socketId === socket.id);
-      if (index !== -1) {
-        users.splice(index, 1);
-
-        if (socket.id === tlobbyData.admin.socketId && users.length > 0) {
-          users[0].isAdmin = true;
-          const newAdminSocketId = users[0].socketId;
-          io.to(newAdminSocketId).emit("setAdmin", { setAdmin: true });
-          tlobbyData.admin.socketId = newAdminSocketId;
-        }
-        socket.leave(roomId);
-        lobby.set(roomId, { ...tlobbyData, users });
-        const lobbyData = lobby.get(roomId);
-        userLobbies.delete(socket.id);
-        if (lobbyData.users.length === 0) lobby.delete(roomId);
-        io.to(roomId).emit("lobby", lobbyData.users);
-      }
+      console.log("userDisconnedtd")
+      disconnectUserService(roomId , socket.id , socket);
     }
   });
 });
@@ -313,6 +306,7 @@ const getCurrentTime = () => {
               cleaningBoardService(roomId);
               const isLastRound = checkLastRoundService(roomId);
               if (!isLastRound) setNextTimeService(roomId, 4);
+              else endGameService(roomId);
               break;
           }
         });

@@ -48,10 +48,12 @@ const UserProfileView = (props) => {
             className="rounded-full object-cover w-[70%] border border-1 border-solid border-black shadow-xl"
           />
 
-          <div className="h-[2em] w-[2em] bg-green-600 flex justify-center items-center rounded-full absolute top-[5%] right-[15%]">
-            5
-          </div>
-          {!props.isAdmin && isAdmin && (
+          {!props.result && (
+            <div className="h-[2em] w-[2em] bg-green-600 flex justify-center items-center rounded-full absolute top-[5%] right-[15%]">
+              1
+            </div>
+          )}
+          {!props.result && !props.isAdmin && isAdmin && (
             <div
               className="h-[1.5em] w-[1.5em] text-xs bg-green-600 flex justify-center items-center rounded-full absolute bottom-[35%] right-[15%] cursor-pointer hover:shadow-md hover:h-[1.75em] hover:w-[1.75em] transition-all"
               onClick={handleChangeAdminClick}
@@ -59,7 +61,7 @@ const UserProfileView = (props) => {
               <GiUpgrade />
             </div>
           )}
-          {!props.isAdmin && isAdmin && (
+          {!props.result && !props.isAdmin && isAdmin && (
             <div
               className="h-[1.5em] w-[1.5em] text-xs bg-red-600 flex justify-center items-center rounded-full absolute bottom-[25%] right-[25%] cursor-pointer hover:shadow-md hover:h-[1.75em] hover:w-[1.75em] transition-all"
               onClick={handleRemoveClick}
@@ -70,6 +72,11 @@ const UserProfileView = (props) => {
           {props.isAdmin && (
             <div className="h-[1.5em] w-[1.5em] text-xs bg-yellow-600 flex justify-center items-center rounded-full absolute bottom-[25%] right-[25%]">
               A
+            </div>
+          )}
+          {props.result && (
+            <div className="h-[3.5em] w-[3.5em] text-xs bg-rose-600 flex justify-center items-center rounded-full absolute top-[5%] left-[15%]">
+              {props.index + 1}
             </div>
           )}
           <div className="text-black my-2">{props.userName}</div>

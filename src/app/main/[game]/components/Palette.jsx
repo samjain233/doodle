@@ -12,6 +12,7 @@ import { AiOutlineClear } from "react-icons/ai";
 import { CgColorPicker } from "react-icons/cg";
 import { useEffect, useRef, useState, useContext } from "react";
 import StateContext from "../States/StateManager";
+import { IoSave } from "react-icons/io5";
 
 const Palette = () => {
   const {
@@ -60,6 +61,17 @@ const Palette = () => {
     ]);
 
     setHistory((prevHistory) => prevHistory.slice(0, prevHistory.length - 1));
+  };
+
+  const saveDrawingClick = () => {
+    if (elements.length === 0) {
+      return;
+    }
+    canvasRef.current.toBlob((imageBlob) => {
+      navigator.clipboard.write([
+        new ClipboardItem({ "image/png": imageBlob }),
+      ]);
+    });
   };
 
   useEffect(() => {
@@ -137,19 +149,13 @@ const Palette = () => {
             <PiPaintBucketFill />
           </div>
           <div
-            // onClick={() => setPresenter((prevPresenter) => !prevPresenter)}
-            className={`p-2 m-1 cursor-pointer hover:bg-gray-500 rounded-full transition-all`}
+            className="p-2 m-1 cursor-pointer hover:bg-gray-500 rounded-full transition-all"
+            onClick={handleClear}
           >
-            <CgColorPicker />
+            <AiOutlineClear />
           </div>
         </div>
 
-        <div
-          className="p-2 m-1 cursor-pointer hover:bg-gray-500 rounded-full transition-all"
-          onClick={handleClear}
-        >
-          <AiOutlineClear />
-        </div>
         <div className="flex flex-row">
           <div
             className="p-2 m-1 cursor-pointer hover:bg-gray-500 rounded-full transition-all"
@@ -172,6 +178,16 @@ const Palette = () => {
             />
           </div>
         </div>
+        <div
+          className="p-2 m-1 cursor-pointer hover:bg-gray-500 rounded-full transition-all"
+          onClick={saveDrawingClick}
+        >
+          <IoSave
+            className={`${
+              elements.length === 0 ? "opacity-50" : "opacity-100"
+            }`}
+          />
+        </div>
         <div className="p-2 ">
           <input
             type="color"
@@ -182,12 +198,12 @@ const Palette = () => {
           />
           <div className="h-full w-full flex flex-col justify center">
             <div
-              className="h-[50px] w-[70px] rounded-md cursor-pointer"
+              className="h-[60px] w-[60px] rounded-md cursor-pointer"
               style={{ backgroundColor: color }}
               onClick={(e) => handleColorClick(e)}
             ></div>
-            <div className="h-full w-full flex flex-row ml-2">
-              <div className="h-full w-full flex flex-col">
+            <div className="h-full w-full flex flex-row justify-between">
+              <div className="h-full w-full flex flex-col justify-center items-center">
                 <div
                   className="bg-black  w-[25px] h-[25px] rounded-md m-[1px] cursor-pointer"
                   onClick={() => setColor("#000000")}
@@ -205,7 +221,7 @@ const Palette = () => {
                   onClick={() => setColor("#16A34A")}
                 ></div>
               </div>
-              <div className="h-full w-full flex flex-col">
+              <div className="h-full w-full flex flex-col justify-center items-center">
                 <div
                   className="bg-yellow-500 w-[25px] h-[25px] rounded-md m-[1px] cursor-pointer"
                   onClick={() => setColor("#EAB308")}

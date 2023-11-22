@@ -18,6 +18,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [round, setRound] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showResult , setShowResult] = useState(false);
 
   return (
     <globalStateContext.Provider
@@ -52,6 +53,8 @@ export const GlobalStateProvider = ({ children }) => {
         setPresenterName,
         loading,
         setLoading,
+        showResult,
+        setShowResult
       }}
     >
       {children}

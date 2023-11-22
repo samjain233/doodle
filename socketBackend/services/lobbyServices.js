@@ -3,7 +3,6 @@ import { lobby } from "../global/GlobalVariables.js";
 export const removeWordService = (roomId) => {
   let lobbyData = lobby.get(roomId);
   lobbyData.roundDetails.word = null;
-  lobby.set(lobbyData);
 };
 
 export const setStartTimeService = (roomId) => {
@@ -14,6 +13,4 @@ export const setStartTimeService = (roomId) => {
   lobby.set(roomId, lobbyData);
 };
 
-export const sendRoundNoService = (roomId)=>{
-
-}
+export const sendRoundNoService = (roomId) => {};

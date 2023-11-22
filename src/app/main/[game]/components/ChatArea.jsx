@@ -25,16 +25,15 @@ const ChatArea = ({ roomId }) => {
   };
 
   useEffect(() => {
-    socket.on("recievedChatData", (data) => {
-      console.log(data);
-      const { userName, chatMsg } = data;
-      setChat((prevChat) => {
-        return [...prevChat, { userName, chatMsg }];
-      });
-    });
-    return () => {
-      socket.removeAllListeners("recievedChatData");
-    };
+    // socket.on("recievedChatData", (data) => {
+    //   const { userName, chatMsg } = data;
+    //   setChat((prevChat) => {
+    //     return [...prevChat, { userName, chatMsg }];
+    //   });
+    // });
+    // return () => {
+    //   socket.removeAllListeners("recievedChatData");
+    // };
   }, []);
 
   useEffect(() => {

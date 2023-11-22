@@ -24,7 +24,7 @@ const UsersInLobby = ({ roomId }) => {
         {lobby.map((element) => {
           return (
             <div key={element.socketId}>
-              <UserProfileView {...element} roomId={roomId} />
+              <UserProfileView {...element} roomId={roomId} result={false} />
             </div>
           );
         })}
