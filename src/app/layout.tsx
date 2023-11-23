@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { GlobalStateProvider } from "./States/GlobalStateManager";
 import { Toaster } from "react-hot-toast";
+import AuthProvider from "./components/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GlobalStateProvider>{children}</GlobalStateProvider>
+        <GlobalStateProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </GlobalStateProvider>
         <Toaster />
       </body>
     </html>

@@ -13,6 +13,7 @@ import { CgColorPicker } from "react-icons/cg";
 import { useEffect, useRef, useState, useContext } from "react";
 import StateContext from "../States/StateManager";
 import { IoSave } from "react-icons/io5";
+import toast from "react-hot-toast";
 
 const Palette = () => {
   const {
@@ -72,6 +73,7 @@ const Palette = () => {
         new ClipboardItem({ "image/png": imageBlob }),
       ]);
     });
+    toast.success("Drawing copied !!!");
   };
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import { lobby } from "../global/GlobalVariables.js";
 import { io } from "../server.js";
 import { displayCorrectWord } from "./displayGuessWord.js";
 import { displayScoreService } from "./displayScoreService.js";
+import { filterProfanity } from "./profanityService.js";
 import { removeChatBlockService } from "./resettingScoreService.js";
 import { setNextTimeService } from "./setNextTimeServie.js";
 import { removePresenterService } from "./setPresenterService.js";
@@ -98,5 +99,18 @@ export const handleInputMessageService = (
     return;
   }
 
-  io.to(roomId).emit("recievedChatData", { userName, chatMsg });
+  const ProfineMessage = filterProfanity(chatMsg);
+
+  const users = lobbyData.users;
+  const index = users.findIndex((user) => user.socketId === socketId);
+  const chatBlock = users[index].chatBlock;
+  if (chatBlock === true) {
+    io.to(socketId).emit("recievedChatData", {
+      userName,
+      chatMsg: ProfineMessage,
+    });
+    return;
+  }
+
+  io.to(roomId).emit("recievedChatData", { userName, chatMsg: ProfineMessage });
 };

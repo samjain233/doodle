@@ -3,6 +3,7 @@ import { IoIosRemoveCircle } from "react-icons/io";
 import globalStateContext from "@/app/States/GlobalStateManager";
 import { socket } from "@/app/test/socketConn";
 import { FaPencilAlt } from "react-icons/fa";
+import { FaTextSlash } from "react-icons/fa6";
 import NavLobbyAvatar from "./NavLobbyAvatar";
 
 const NavLobby = (props) => {
@@ -16,6 +17,16 @@ const NavLobby = (props) => {
       removedUserSocketId: removedUserId,
     };
     socket.emit("removeUser", removeUserData);
+  };
+
+  const handleChatBlockUser = (chatBlockUserId, isBlock) => {
+    if (isAdmin === false) return;
+    const chatBlockUserData = {
+      roomId: props.roomId,
+      chatBlockUserId: chatBlockUserId,
+      isBlock: !isBlock,
+    };
+    socket.emit("chatBlockUser", chatBlockUserData);
   };
 
   // useEffect(() => {
@@ -70,7 +81,21 @@ const NavLobby = (props) => {
                 )}
                 {isAdmin && !user.isAdmin && (
                   <div
-                    className="cursor-pointer hover:text-red-500 transition-all"
+                    className={`cursor-pointer mx-1  ${
+                      user.chatBlock === true
+                        ? "text-teal-800 bg-gray-500"
+                        : "text-teal-600 bg-gray-300"
+                    } hover:text-teal-700 hover:bg-gray-400 transition-all text-lg p-1  rounded-full`}
+                    onClick={() =>
+                      handleChatBlockUser(user.socketId, user.chatBlock)
+                    }
+                  >
+                    <FaTextSlash />
+                  </div>
+                )}
+                {isAdmin && !user.isAdmin && (
+                  <div
+                    className="cursor-pointer mx-1 hover:text-red-500 transition-all"
                     onClick={() => handleRemoveUser(user.socketId)}
                   >
                     <IoIosRemoveCircle />

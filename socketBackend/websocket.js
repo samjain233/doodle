@@ -20,6 +20,7 @@ import {
 import { drawToken } from "./utils/drawToken.js";
 import {
   adminChangeMessageService,
+  blockUserFromChatMessageService,
   failToSelectWord,
   userJoinedTheRoomService,
 } from "./services/messageService.js";
@@ -86,6 +87,7 @@ io.on("connection", (socket) => {
         isAdmin: false,
         score: 0,
         hintsUsed: 0,
+        chatBlock: false,
       });
       lobby.set(roomId, { ...tLobbyData, users });
     } else {
@@ -120,6 +122,7 @@ io.on("connection", (socket) => {
             isAdmin: true,
             score: 0,
             hintsUsed: 0,
+            chatBlock: false,
           },
         ],
       });
@@ -172,6 +175,12 @@ io.on("connection", (socket) => {
     if (presenterSocketId === socket.id) {
       socket.to(roomId).emit("whiteBoardDrawingResponse", elements);
     }
+  });
+
+  //listener for sending and recieveing height and width details
+  socket.on("canvasWidthHeight", (data) => {
+    const { width, height, roomId } = data;
+    socket.to(roomId).emit("getCanvasWidthHeight", { width, height });
   });
 
   socket.on("sendMessage", (data) => {
@@ -246,11 +255,29 @@ io.on("connection", (socket) => {
     }
   });
 
+  //only for admin
+  socket.on("chatBlockUser", async (data) => {
+    const { roomId, chatBlockUserId, isBlock } = data;
+    const lobbyData = lobby.get(roomId);
+    const adminSocketId = lobbyData.admin.socketId;
+    if (adminSocketId === socket.id) {
+      const users = lobbyData.users;
+      const index = users.findIndex(
+        (user) => user.socketId === chatBlockUserId
+      );
+      users[index].chatBlock = isBlock;
+      const userName = users[index].userName;
+      lobby.set(roomId, { ...lobbyData, users });
+      blockUserFromChatMessageService(roomId, userName, isBlock);
+      io.to(roomId).emit("lobby", users);
+    }
+  });
+
   socket.on("disconnect", async () => {
     const roomId = userLobbies.get(socket.id);
     if (roomId !== undefined && roomId !== null) {
-      console.log("userDisconnedtd")
-      disconnectUserService(roomId , socket.id , socket);
+      console.log("userDisconnedtd");
+      disconnectUserService(roomId, socket.id, socket);
     }
   });
 });

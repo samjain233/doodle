@@ -25,8 +25,23 @@ export const adminRemovedMemberMessageService = (roomId, username) => {
   io.to(roomId).emit("recievedChatData", { userName: modName, chatMsg });
 };
 
-export const leaveTheLobbyMessageService = (roomId , username) =>{
+export const leaveTheLobbyMessageService = (roomId, username) => {
   const modName = "Moderator";
   const chatMsg = `${username} leaved the lobby`;
   io.to(roomId).emit("recievedChatData", { userName: modName, chatMsg });
-}
+};
+
+export const blockUserFromChatMessageService = (
+  roomId,
+  username,
+  isBlocked
+) => {
+  const modName = "Moderator";
+  if (isBlocked === true) {
+    const chatMsg = `Admin disabled ${username} Chat`;
+    io.to(roomId).emit("recievedChatData", { userName: modName, chatMsg });
+  } else {
+    const chatMsg = `Admin enabled ${username} Chat`;
+    io.to(roomId).emit("recievedChatData", { userName: modName, chatMsg });
+  }
+};

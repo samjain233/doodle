@@ -233,6 +233,22 @@ const WhiteBoard = ({ isShiftPressed, roomId }) => {
     socket.on("whiteBoardDrawingResponse", (data) => {
       if (presenter === false) setElements(data);
     });
+    if (presenter === true) {
+      //sending width,height of the canvas to all recipients
+      const width = canvasRef.current.offsetWidth;
+      const height = canvasRef.current.offsetHeight;
+      socket.emit("canvasWidthHeight", { width, height, roomId });
+
+      const canvas = canvasRef.current;
+      canvas.height = canvas.offsetHeight;
+      canvas.width = canvas.offsetWidth;
+      const ctx = canvas.getContext("2d");
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+
+      ctxRef.current = ctx;
+    }
   }, [presenter]);
 
   useEffect(() => {
@@ -245,6 +261,22 @@ const WhiteBoard = ({ isShiftPressed, roomId }) => {
   }, [elements]);
 
   useEffect(() => {
+    socket.on("getCanvasWidthHeight", (data) => {
+      const { width, height } = data;
+      const canvas = canvasRef.current;
+      const newHeight = (canvas.offsetHeight * width) / canvas.offsetWidth;
+      canvas.height = newHeight;
+      canvas.width = width;
+      // canvas.height = canvas.offsetHeight;
+      // canvas.width = canvas.offsetWidth;
+      const ctx = canvas.getContext("2d");
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+
+      ctxRef.current = ctx;
+    });
+
     const canvas = canvasRef.current;
     canvas.height = canvas.offsetHeight;
     canvas.width = canvas.offsetWidth;

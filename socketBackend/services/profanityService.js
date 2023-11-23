@@ -10,6 +10,6 @@ function createRegexPattern(word) {
 const profanityPatterns = profanityList.map(createRegexPattern);
 const combinedPattern = new RegExp(`(${profanityPatterns.join('|')})`, 'gi');
 
-function filterProfanity(input) {
+export function filterProfanity(input) {
   return input.replace(combinedPattern, (match) => '*'.repeat(match.length));
 }

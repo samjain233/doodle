@@ -5,7 +5,7 @@ import { socket } from "@/app/test/socketConn";
 import globalStateContext from "@/app/States/GlobalStateManager";
 
 const ChatArea = ({ roomId }) => {
-  const { chat, setChat, chatBlock , userName } = useContext(globalStateContext);
+  const { chat, setChat, chatBlock, userName } = useContext(globalStateContext);
   const [inputChat, setInputChat] = useState("");
   const endMessageRef = useRef(null);
 
@@ -17,7 +17,7 @@ const ChatArea = ({ roomId }) => {
     if (inputChat === "" || chatBlock === true) return;
     const data = {
       roomId: roomId,
-      userName : userName,
+      userName: userName,
       chatMsg: inputChat,
     };
     socket.emit("sendMessage", data);
@@ -69,6 +69,7 @@ const ChatArea = ({ roomId }) => {
               value={inputChat}
               onChange={(e) => setInputChat(e.target.value)}
               onKeyDown={(e) => handleKeyDown(e)}
+              spellCheck={false}
             />
             <div
               className="absolute right-0 top-0 p-1 text-3xl hover:cursor-pointer"

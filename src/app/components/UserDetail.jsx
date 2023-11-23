@@ -6,12 +6,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { joinLobbyAudio } from "../audioController";
 import toast from "react-hot-toast";
 import { GrLinkPrevious } from "react-icons/gr";
+import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa6";
+import { signIn, useSession } from "next-auth/react";
 
 const UserDetail = () => {
   const [roomId, setRoomId] = useState("");
   const [displayRoomId, setDisplayRoomId] = useState(false);
+  const [inputUserNameIsDisabled, setInputUserNameIsDisabled] = useState(false);
+  const [userEmail, setUserEmail] = useState(null);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const session = useSession();
   const {
     userName,
     setUserName,
@@ -38,7 +43,11 @@ const UserDetail = () => {
     const response = await fetch(findGameApiUrl);
     const { room, msg } = await response.json();
     if (room !== null) {
-      socket.emit("socketConn", { roomId: room, userName: userName });
+      socket.emit("socketConn", {
+        roomId: room,
+        userName: userName,
+        userEmail: userEmail,
+      });
       toast.success("Room find Successful : " + room);
     } else {
       toast.error(msg);
@@ -53,7 +62,11 @@ const UserDetail = () => {
     }
     //creating new room
     const randomRoomId = randomstring.generate(7);
-    socket.emit("socketConn", { roomId: randomRoomId, userName: userName });
+    socket.emit("socketConn", {
+      roomId: randomRoomId,
+      userName: userName,
+      userEmail: userEmail,
+    });
     toast.success("Successfull Created Room : " + randomRoomId);
   };
 
@@ -76,7 +89,11 @@ const UserDetail = () => {
     const response = await fetch(findSpecificGameApiUrl);
     const { room, msg } = await response.json();
     if (room !== null) {
-      socket.emit("socketConn", { roomId: room, userName: userName });
+      socket.emit("socketConn", {
+        roomId: room,
+        userName: userName,
+        userEmail: userEmail,
+      });
       toast.success("Room find Successful : " + room);
     } else {
       toast.error(msg);
@@ -85,11 +102,12 @@ const UserDetail = () => {
 
   useEffect(() => {
     socket.on("statusSocketConn", (data) => {
-      const { success, roomId, username } = data;
+      const { success, roomId, username, userEmail } = data;
       if (success) {
         const senddata = {
           roomId: roomId,
           userName: username,
+          userEmail: userEmail,
         };
         socket.emit("joinLobby", senddata);
         toast.loading("Joining lobby ....");
@@ -144,6 +162,14 @@ const UserDetail = () => {
   }, []);
 
   useEffect(() => {
+    console.log(session);
+    if (session?.status === "authenticated") {
+      setUserName(session.data.user.name);
+      setInputUserNameIsDisabled(true);
+    }
+  }, [session]);
+
+  useEffect(() => {
     if (loading === false) toast.dismiss();
   }, [loading]);
 
@@ -160,6 +186,7 @@ const UserDetail = () => {
           onChange={(e) => setUserName(e.target.value)}
           spellCheck="false"
           ref={userNameBoxRef}
+          disabled={inputUserNameIsDisabled}
         />
       </div>
       {displayRoomId && (
@@ -208,6 +235,26 @@ const UserDetail = () => {
           className="bg-black px-8 py-2 rounded-2xl text-white mx-2 hover:px-12 transition-all"
         >
           Join Room
+        </button>
+      </div>
+      <div className="w-full h-full flex flex-row justify-center items-center text-lg mt-8">
+        <button
+          onClick={() => signIn("google")}
+          className="bg-rose-500 px-4 py-4 rounded-full text-white mx-2 hover:bg-rose-700 transition-all"
+        >
+          <FaGoogle />
+        </button>
+        <button
+          onClick={() => signIn("discord")}
+          className="bg-emerald-500 px-4 py-4 rounded-full text-white mx-2 hover:bg-emerald-800 transition-all"
+        >
+          <FaDiscord />
+        </button>
+        <button
+          onClick={() => signIn("github")}
+          className="bg-amber-500 px-4 py-4 rounded-full text-white mx-2 hover:bg-amber-600 transition-all"
+        >
+          <FaGithub />
         </button>
       </div>
     </>
