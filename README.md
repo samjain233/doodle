@@ -1,4 +1,5 @@
 # MARS DOODLE
+![image](https://github.com/samjain233/doodle/assets/94921996/8fbdb11a-78b4-4665-b65d-b1e6f09b3028)
 
 Welcome to our Real-Time Drawing and Guessing Web App Game! This project, built with Next.js, Node.js, Socket.io, and MongoDB, provides an interactive and engaging experience for users who love to draw and guess in real-time. With a range of features, including multiplayer support, chat functionality, and advanced drawing tools, this web app aims to create a fun and dynamic environment for players.
 
