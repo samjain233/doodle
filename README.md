@@ -56,9 +56,13 @@ Welcome to our Real-Time Drawing and Guessing Web App Game! This project, built 
 - Enjoy the flexibility of undoing and redoing recent drawing operations.
 
 ### 9. Profanity Filter
+![image](https://github.com/samjain233/doodle/assets/94921996/cde02f16-cd81-43cd-b6fe-4f1508b8d421)
+
 - Maintain a friendly environment with a profanity filter in the chat.
 
 ### 10. Drawing Shapes
+![image](https://github.com/samjain233/doodle/assets/94921996/36990f94-bef5-4ad8-a39c-13a3a909e288)
+
 - Explore creativity with the ability to draw various shapes, including circle, square, rectangle, ellipse, free draw, and lines.
 
 ## Getting Started
