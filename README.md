@@ -79,27 +79,44 @@ To get started with the Real-Time Drawing and Guessing Web App, follow these ste
 
 1. Clone the repository.
 ```bash
-  git clone https://link-to-project
+  git clone [https://link-to-project](https://github.com/samjain233/doodle)
 ```
 
 
-Go to the project directory
+2. Go to the project directory
 
 ```bash
-  cd my-project
+  cd doodle
 ```
 
 
-Install dependencies
+3. Install dependencies
 
 ```bash
   npm install
 ```
+4. Creating .env file
+```code
+NEXT_PUBLIC_SERVER=http://localhost:5000 //backend Server
+NEXT_PUBLIC_CLIENT=http://localhost:3000 //frontend Server
 
-Start the server
+NEXTAUTH_SECRET=kjefe**********************************888 //random string
+NEXTAUTH_URL=http://localhost:3000 //frontend Sever
+NEXTAUTH_URL_INTERNAL=http://localhost:3000 //frontend Server
+
+GOOGLE_ID= //google id for goolge auth
+GOOGLE_CLIENT_SECRET= //google client secret
+
+DISCORD_CLIENT_ID= //discord id for discord auth
+DISCORD_CLIENT_SECRET= //discord id for discord auth
+
+GITHUB_ID= //github id for github auth
+GITHUB_SECRET= //github id for github auth
+```
+6. Start the server in development mode
 
 ```bash
-  npm run start
+  npm run dev
 ```
 
 ## Deployment
