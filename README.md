@@ -118,6 +118,27 @@ GITHUB_SECRET= //github id for github auth
 ```bash
   npm run dev
 ```
+7. Go to the backend proeject directory
+   
+```bash
+  cd socketBackend
+```
+
+8. Install dependencies
+
+```bash
+  npm install
+```
+
+9. Creating .env file
+```node
+MONGO_CONN=mongodb+srv://yourUsername:yourpassword@cluster0.bgt3y.mongodb.net/marsdoodledb
+```
+
+10. Start the socket server
+```bash
+  node websocket.js
+```
 
 ## Deployment
 
