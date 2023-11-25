@@ -96,7 +96,7 @@ To get started with the Real-Time Drawing and Guessing Web App, follow these ste
   npm install
 ```
 4. Creating .env file
-```code
+```node
 NEXT_PUBLIC_SERVER=http://localhost:5000 //backend Server
 NEXT_PUBLIC_CLIENT=http://localhost:3000 //frontend Server
 
