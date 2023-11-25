@@ -43,7 +43,7 @@ Welcome to our Real-Time Drawing and Guessing Web App Game! This project, built 
 ![image](https://github.com/samjain233/doodle/assets/94921996/9a20ed34-e243-42c6-8789-808b905e0b2e)
 
 - Create personalized profiles and track your game history.
-- Implement user authentication for a secure and unique user experience.
+- User can be authenticated using google, discord and github.
 
 ### 5. Drawing Tools
 - Choose from different pen colors and brush sizes.
