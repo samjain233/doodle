@@ -78,26 +78,29 @@ Welcome to our Real-Time Drawing and Guessing Web App Game! This project, built 
 To get started with the Real-Time Drawing and Guessing Web App, follow these steps:
 
 1. Clone the repository.
-bash
+```bash
   git clone https://link-to-project
+```
 
 
 Go to the project directory
 
-bash
+```bash
   cd my-project
+```
 
 
 Install dependencies
 
-bash
+```bash
   npm install
-
+```
 
 Start the server
 
-bash
+```bash
   npm run start
+```
 
 ## Deployment
 
