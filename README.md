@@ -26,6 +26,8 @@ Welcome to our Real-Time Drawing and Guessing Web App Game! This project, built 
 ## Features
 
 ### 1. Multiplayer Drawing and Guessing
+![image](https://github.com/samjain233/doodle/assets/94921996/1c098b7e-e2f3-4c3c-a62d-f89ab0da6d0c)
+
 - Experience real-time drawing and guessing with friends or other players.
 - One player draws a word while others try to guess it.
 
@@ -38,6 +40,8 @@ Welcome to our Real-Time Drawing and Guessing Web App Game! This project, built 
 - Enhance the gaming experience with real-time conversations.
 
 ### 4. User Authentication and Profile Management
+![image](https://github.com/samjain233/doodle/assets/94921996/9a20ed34-e243-42c6-8789-808b905e0b2e)
+
 - Create personalized profiles and track your game history.
 - Implement user authentication for a secure and unique user experience.
 
@@ -49,10 +53,14 @@ Welcome to our Real-Time Drawing and Guessing Web App Game! This project, built 
 - Save your masterpiece at any point during the drawing session.
 
 ### 7. Room Administration
+![image](https://github.com/samjain233/doodle/assets/94921996/18fcdf6c-b06a-4eef-8208-492d53498ba7)
+
 - Assign a user as the room admin with the power to kick users and make others admins.
 - Chat restrict a user without kicking them for better moderation.
 
 ### 8. Undo and Redo
+![image](https://github.com/samjain233/doodle/assets/94921996/8040ac1d-b7da-4a8e-b743-25cc1036c731)
+
 - Enjoy the flexibility of undoing and redoing recent drawing operations.
 
 ### 9. Profanity Filter
