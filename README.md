@@ -46,6 +46,8 @@ Welcome to our Real-Time Drawing and Guessing Web App Game! This project, built 
 - User can be authenticated using google, discord and github.
 
 ### 5. Drawing Tools
+![image](https://github.com/samjain233/doodle/assets/94921996/24cad121-e2da-4e24-a76c-5116107d7958)
+
 - Choose from different pen colors and brush sizes.
 - Utilize features like eraser, bucket fill, and color picker.
 
