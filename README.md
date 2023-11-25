@@ -134,7 +134,7 @@ GITHUB_SECRET= //github id for github auth
 
 9. Creating .env file
 ```node
-MONGO_CONN=mongodb+srv://yourUsername:yourpassword@cluster0.bgt3y.mongodb.net/marsdoodledb
+MONGO_CONN=mongodb+srv://yourUsername:yourpassword@cluster0.****.mongodb.net/dbName
 ```
 
 10. Start the socket server
